@@ -1,5 +1,5 @@
 {
-  "id": "125f2b76-fb62-4dfc-b278-cfbd868bdbc0",
+  "id": "d23e7f21-a5ff-40bd-8833-543ba22d7c9e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -48,8 +48,8 @@
         }
       },
       "indexes": {
-        "instances_clerk_id_idx": {
-          "name": "instances_clerk_id_idx",
+        "keys_clerk_idx": {
+          "name": "keys_clerk_idx",
           "columns": [
             {
               "expression": "clerk_id",
@@ -63,8 +63,8 @@
           "method": "btree",
           "with": {}
         },
-        "active_instances_idx": {
-          "name": "active_instances_idx",
+        "keys_active_idx": {
+          "name": "keys_active_idx",
           "columns": [
             {
               "expression": "is_active",
@@ -78,8 +78,8 @@
           "method": "btree",
           "with": {}
         },
-        "instance_key_hash_idx": {
-          "name": "instance_key_hash_idx",
+        "keys_hash_idx": {
+          "name": "keys_hash_idx",
           "columns": [
             {
               "expression": "instance_key_hash",

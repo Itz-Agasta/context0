@@ -37,9 +37,9 @@ CREATE TABLE "users" (
 --> statement-breakpoint
 ALTER TABLE "keys" ADD CONSTRAINT "keys_clerk_id_users_clerk_id_fk" FOREIGN KEY ("clerk_id") REFERENCES "public"."users"("clerk_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "subscriptions" ADD CONSTRAINT "subscriptions_clerk_id_users_clerk_id_fk" FOREIGN KEY ("clerk_id") REFERENCES "public"."users"("clerk_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "instances_clerk_id_idx" ON "keys" USING btree ("clerk_id");--> statement-breakpoint
-CREATE INDEX "active_instances_idx" ON "keys" USING btree ("is_active");--> statement-breakpoint
-CREATE INDEX "instance_key_hash_idx" ON "keys" USING btree ("instance_key_hash");--> statement-breakpoint
+CREATE INDEX "keys_clerk_idx" ON "keys" USING btree ("clerk_id");--> statement-breakpoint
+CREATE INDEX "keys_active_idx" ON "keys" USING btree ("is_active");--> statement-breakpoint
+CREATE INDEX "keys_hash_idx" ON "keys" USING btree ("instance_key_hash");--> statement-breakpoint
 CREATE INDEX "subscription_clerk_id_idx" ON "subscriptions" USING btree ("clerk_id");--> statement-breakpoint
 CREATE INDEX "active_subscriptions_idx" ON "subscriptions" USING btree ("is_active");--> statement-breakpoint
 CREATE INDEX "clerk_id_idx" ON "users" USING btree ("clerk_id");

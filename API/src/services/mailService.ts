@@ -57,7 +57,7 @@ export class MailService {
               </p>
               
               <p style="color: #4b5563; font-size: 16px; margin: 0 0 30px 0; line-height: 1.6;">
-                Congratulations! Your contract has been successfully deployed to context0.
+                Congratulations! Your contract has been successfully deployed to Context0.
                 You're now part of the next generation of decentralized storage solutions.
               </p>
               <!-- Credentials Card -->

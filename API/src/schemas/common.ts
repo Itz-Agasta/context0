@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// Basic field validations for ArchiveNET system
+// Basic field validations for Context0 system
 export const uuidSchema = z.string().uuid();
 export const emailSchema = z.string().email();
 export const arweaveTransactionIdSchema = z.string().length(43); // Arweave TX IDs are exactly 43 chars

@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { memoryMetadataSchema, searchFiltersSchema } from "./common.js";
 
-// This schemas are what ArchiveNET api expects
+// This schemas are what Context0 api expects
 
 /** Memory creation request - what MCP server sends to API
-POST https://api.archivenet.com/memories
+POST https://api.context0.com/memories
 Authorization: Bearer ak_1234567890abcdef (API key)
 Content-Type: application/json
 
@@ -30,7 +30,7 @@ export const createMemorySchema = z
 	);
 
 /** Memory search request - for semantic search through user's memories
-GET https://api.archivenet.com/memories/search
+GET https://api.context0.com/memories/search
 Authorization: Bearer ak_1234567890abcdef (API key)
 Content-Type: application/json
 

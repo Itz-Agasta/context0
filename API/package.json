@@ -1,7 +1,7 @@
 {
-	"name": "archivenet-api",
+	"name": "context0-api",
 	"version": "1.0.0",
-	"description": "Backend API for ArchiveNET",
+	"description": "Backend API for Context0",
 	"main": "dist/server.js",
 	"type": "module",
 	"scripts": {

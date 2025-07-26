@@ -10,7 +10,7 @@ import { initializeRedis } from "./redis.js";
 /**
 * Configuration interface for Arweave blockchain connection.
 *
-* This interface defines the complete setup required for ArchiveNET to interact
+* This interface defines the complete setup required for Context0 to interact
 * with the Arweave blockchain through Warp Contracts, including wallet authentication,
 
 * caching infrastructure (Redis), and network configuration.
@@ -28,7 +28,7 @@ export interface ArweaveConfig {
 }
 
 /**
-* Initializes and configures the complete Arweave blockchain infrastructure for ArchiveNET.
+* Initializes and configures the complete Arweave blockchain infrastructure for Context0.
 *
 * This function sets up a production-ready blockchain connection with automatic
 * environment detection, wallet management, and multi-tier caching. It handles:

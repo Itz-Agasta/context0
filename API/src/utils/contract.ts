@@ -9,8 +9,8 @@ if (
 }
 
 const JWT_SECRET = process.env.CONTRACT_JWT_SECRET ?? "hack4bengal_vyse";
-const JWT_ISSUER = "archivenet-api";
-const JWT_AUDIENCE = "archivenet-users";
+const JWT_ISSUER = "context0-api";
+const JWT_AUDIENCE = "context0-users";
 
 export interface ContractHashPayload {
 	contractId: string;

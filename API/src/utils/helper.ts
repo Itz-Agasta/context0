@@ -1,5 +1,5 @@
 /**
- * ArchiveNET Infrastructure Helper Functions
+ * Context0 Infrastructure Helper Functions
  *
  * This module handles critical system operations including:
  *

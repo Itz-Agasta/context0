@@ -24,7 +24,7 @@ export interface MemoryStats {
 }
 
 /**
- * MemoryService - Core service for semantic memory storage and retrieval via ArchiveNET API
+ * MemoryService - Core service for semantic memory storage and retrieval via Context0 API
  *
  * This service provides a high-level interface for:
  * - Converting text into searchable vector embeddings

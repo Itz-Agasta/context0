@@ -1,7 +1,7 @@
 {
 	"name": "eizendb",
 	"version": "1.0.0",
-	"description": "Vector database backend lib for ArchiveNet",
+	"description": "Vector database backend lib for Context0",
 	"main": "lib/index.cjs",
 	"module": "lib/index.js",
 	"types": "lib/index.d.ts",
@@ -41,11 +41,11 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Itz-Agasta/ArchiveNET/tree/main/Eizen"
+		"url": "https://github.com/Itz-Agasta/context0/tree/main/Eizen"
 	},
-	"homepage": "https://github.com/Itz-Agasta/ArchiveNET/tree/main/Eizen#readme",
+	"homepage": "https://github.com/Itz-Agasta/context0/tree/main/Eizen#readme",
 	"bugs": {
-		"url": "https://github.com/Itz-Agasta/ArchiveNET/issues"
+		"url": "https://github.com/Itz-Agasta/context0/issues"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.0.0",

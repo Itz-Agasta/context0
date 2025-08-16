@@ -8,17 +8,25 @@ services:
       - redis_data:/data
     command: redis-server --appendonly yes
     restart: unless-stopped
+    networks:
+      - context0-network
   api:
     build: ./API
     container_name: context0-api
     ports:
       - "3000:3000"
     environment:
+      - NODE_ENV=development
       - REDIS_URL=redis://redis:6379
     env_file:
       - ./API/.env
     depends_on:
       - redis
     restart: unless-stopped
+    networks:
+      - context0-network
+networks:
+  context0-network:
+    driver: bridge
 volumes:
   redis_data:

@@ -15,6 +15,7 @@ import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import { arLocalService } from "./config/arlocal.js";
+import { initializeDatabase } from "./db/db.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { EizenService } from "./services/EizenService.js";
 import { embeddingService } from "./services/EmbeddingService.js";
@@ -37,8 +38,11 @@ async function initializeServices() {
 	}
 	// Initialize vector embedding service first (required by other services)
 	await embeddingService.ensureInitialized();
-	// Initialize semantic search configuration
+	// Initialize database connection
+	await initializeDatabase();
+	// Initialize semantic search configuration (includes Redis initialization)
 	await EizenService.initEizenConfig();
+
 	console.log("Context0 is ready to handle user requests");
 }
 

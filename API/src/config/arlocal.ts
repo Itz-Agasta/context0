@@ -1,5 +1,6 @@
 import { createRequire } from "node:module";
 import Arweave from "arweave";
+import { logger } from "./winston.js";
 
 export class ArLocalService {
 	private arLocal: { start(): Promise<void>; stop(): Promise<void> } | null =
@@ -13,7 +14,7 @@ export class ArLocalService {
 
 	async start(): Promise<void> {
 		if (this.isRunning) {
-			console.log("ArLocal is already running");
+			logger.info("ArLocal is already running");
 
 			// Verify it's actually accessible
 			const accessible = await this.isArLocalAccessible();
@@ -21,7 +22,7 @@ export class ArLocalService {
 			if (accessible) {
 				return;
 			}
-			console.log(
+			logger.info(
 				"ArLocal appears to be running but not accessible, restarting..."
 			);
 
@@ -50,7 +51,7 @@ export class ArLocalService {
 				throw new Error("ArLocal started but is not accessible");
 			}
 		} catch (error) {
-			console.error("Failed to start ArLocal:", error);
+			logger.error("Failed to start ArLocal:", error);
 			this.isRunning = false;
 			this.arLocal = null;
 			throw error;
@@ -59,17 +60,17 @@ export class ArLocalService {
 
 	async stop(): Promise<void> {
 		if (!(this.isRunning && this.arLocal)) {
-			console.log("ArLocal is not running");
+			logger.info("ArLocal is not running");
 			return;
 		}
 		try {
-			console.log("Stopping ArLocal...");
+			logger.info("Stopping ArLocal...");
 			await this.arLocal.stop();
 			this.arLocal = null;
 			this.isRunning = false;
-			console.log("ArLocal stopped successfully");
+			logger.info("ArLocal stopped successfully");
 		} catch (error) {
-			console.error("Failed to stop ArLocal:", error);
+			logger.error("Failed to stop ArLocal:", error);
 			throw error;
 		}
 	}
@@ -86,9 +87,9 @@ export class ArLocalService {
 			});
 
 			await arweave.api.get("mine");
-			console.log("Block mined successfully");
+			logger.info("Block mined successfully");
 		} catch (error) {
-			console.error("Failed to mine block:", error);
+			logger.error("Failed to mine block:", error);
 			throw error;
 		}
 	}
@@ -127,7 +128,7 @@ export class ArLocalService {
 			await arweave.network.getInfo();
 			return true;
 		} catch (error) {
-			console.warn("ArLocal is not accessible:", (error as Error).message);
+			logger.warn("ArLocal is not accessible:", (error as Error).message);
 			return false;
 		}
 	}

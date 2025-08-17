@@ -4,6 +4,7 @@ import { embeddingService } from "../services/EmbeddingService.js";
 import { MemoryService } from "../services/MemoryService.js";
 import { checkRedisConnectivity } from "../utils/helper.js";
 import { errorResponse, successResponse } from "../utils/responses.js";
+import { logger } from "../config/winston.js";
 
 const router = Router();
 
@@ -42,7 +43,7 @@ router.get("/detailed", async (_req, res) => {
 				const eizenService = await EizenService.forContract(fallbackContractId);
 				eizenStats = await eizenService.getStats();
 			} catch (error) {
-				console.warn("Could not get Eizen stats for health check:", error);
+				logger.warn("Could not get Eizen stats for health check:", error);
 			}
 		}
 
@@ -54,7 +55,7 @@ router.get("/detailed", async (_req, res) => {
 				const memoryService = new MemoryService(eizenService);
 				memoryStats = await memoryService.getStats();
 			} catch (error) {
-				console.warn("Could not get Memory stats for health check:", error);
+				logger.warn("Could not get Memory stats for health check:", error);
 			}
 		}
 
@@ -137,7 +138,7 @@ router.get("/detailed", async (_req, res) => {
 
 		res.json(successResponse(healthData, "Detailed health check completed"));
 	} catch (error) {
-		console.error("Health check error:", error);
+		logger.error("Health check error:", error);
 		res
 			.status(503)
 			.json(
@@ -201,7 +202,7 @@ router.get("/eizen", async (_req, res) => {
 			)
 		);
 	} catch (error) {
-		console.error("Eizen health check error:", error);
+		logger.error("Eizen health check error:", error);
 		res
 			.status(503)
 			.json(
@@ -268,7 +269,7 @@ router.get("/memory", async (_req, res) => {
 			)
 		);
 	} catch (error) {
-		console.error("Memory health check error:", error);
+		logger.error("Memory health check error:", error);
 		res
 			.status(503)
 			.json(

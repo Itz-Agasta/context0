@@ -1,5 +1,6 @@
 import { pipeline } from "@xenova/transformers";
 import type { VectorEmbedding } from "../schemas/eizen.js";
+import { logger } from "../config/winston.js";
 
 type EmbeddingPipeline = (
 	texts: string[],
@@ -53,8 +54,8 @@ export class EmbeddingService {
 	 */
 	private async initialize(): Promise<void> {
 		try {
-			console.log("Initializing EmbeddingService...");
-			console.log(`Loading model: ${this.modelName}`);
+			logger.info("Initializing EmbeddingService...");
+			logger.info(`Loading model: ${this.modelName}`);
 
 			this.extractor = (await pipeline(
 				"feature-extraction",
@@ -62,9 +63,9 @@ export class EmbeddingService {
 			)) as EmbeddingPipeline; // This may take time on first run as it downloads model files
 
 			this.isInitialized = true;
-			console.log("EmbeddingService initialized successfully");
+			logger.info("EmbeddingService initialized successfully");
 		} catch (error) {
-			console.error("EmbeddingService initialization failed:", error);
+			logger.error("EmbeddingService initialization failed:", error);
 			throw error;
 		}
 	}
@@ -133,7 +134,7 @@ export class EmbeddingService {
 		}
 
 		try {
-			console.log(
+			logger.info(
 				`Converting text to embeddings: "${text.substring(0, 50)}..."`
 			);
 
@@ -147,7 +148,7 @@ export class EmbeddingService {
 			// Float32Array is not JSON-serializable, so we convert to regular array
 			const embeddings: VectorEmbedding = Array.from(response.data);
 
-			console.log(`Generated ${embeddings.length}-dimensional embeddings`);
+			logger.info(`Generated ${embeddings.length}-dimensional embeddings`);
 
 			return {
 				embeddings,
@@ -155,7 +156,7 @@ export class EmbeddingService {
 				model: this.modelName,
 			};
 		} catch (error) {
-			console.error("Failed to generate embeddings:", error);
+			logger.error("Failed to generate embeddings:", error);
 			throw new Error(
 				`Failed to generate embeddings: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
@@ -189,7 +190,7 @@ export class EmbeddingService {
 		}
 
 		try {
-			console.log(`Converting ${texts.length} texts to embeddings (batch)`);
+			logger.info(`Converting ${texts.length} texts to embeddings (batch)`);
 
 			// Process all texts in a single pipeline call for efficiency
 			const response = await this.extractor(texts, {
@@ -268,10 +269,10 @@ export class EmbeddingService {
 				);
 			}
 
-			console.log(`Generated embeddings for ${results.length} texts`);
+			logger.info(`Generated embeddings for ${results.length} texts`);
 			return results;
 		} catch (error) {
-			console.error("Failed to generate batch embeddings:", error);
+			logger.error("Failed to generate batch embeddings:", error);
 			throw new Error(
 				`Failed to generate batch embeddings: ${error instanceof Error ? error.message : "Unknown error"}`
 			);

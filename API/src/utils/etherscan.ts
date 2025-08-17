@@ -1,4 +1,5 @@
 import axios from "axios";
+import { logger } from "../config/winston.js";
 
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 
@@ -14,10 +15,10 @@ export const verifyTransaction = async (txHash?: string) => {
 
 	try {
 		const response = await axios.get(url);
-		console.log("Etherscan response:", response.data);
+		logger.info("Etherscan response:", response.data);
 		return response.data;
 	} catch (error) {
-		console.error("Error verifying transaction:", error);
+		logger.error("Error verifying transaction:", error);
 		throw error;
 	}
 };

@@ -1,3 +1,4 @@
+import { logger } from "../config/winston.js";
 import type { SearchFilters } from "../schemas/common.js";
 import type { VectorMetadata } from "../schemas/eizen.js";
 import type { CreateMemory, SearchMemory } from "../schemas/memory.js";
@@ -95,7 +96,7 @@ export class MemoryService {
 	 */
 	async createMemory(data: CreateMemory): Promise<CreateMemoryResult> {
 		try {
-			console.log(
+			logger.info(
 				`Creating memory from ${data.content.length} characters of content`
 			);
 
@@ -116,7 +117,7 @@ export class MemoryService {
 				metadata: enhancedMetadata,
 			});
 
-			console.log(`Memory created successfully with ID: ${result.vectorId}`);
+			logger.info(`Memory created successfully with ID: ${result.vectorId}`);
 
 			return {
 				success: true,
@@ -124,7 +125,7 @@ export class MemoryService {
 				message: `Memory created from ${data.content.length} characters of content`,
 			};
 		} catch (error) {
-			console.error("Failed to create memory:", error);
+			logger.error("Failed to create memory:", error);
 			throw new Error(
 				`Failed to create memory: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
@@ -167,7 +168,7 @@ export class MemoryService {
 	 */
 	async searchMemories(data: SearchMemory): Promise<MemoryResult[]> {
 		try {
-			console.log(`Searching memories with query: "${data.query}"`);
+			logger.info(`Searching memories with query: "${data.query}"`);
 
 			// Step 1: Convert search query into the same vector space as stored memories
 			// This enables semantic comparison (similarity matching)
@@ -194,11 +195,11 @@ export class MemoryService {
 			// NOTE: Still theoretical. may not work properly
 			const filteredMemories = this.applyFilters(memories, data.filters);
 
-			console.log(`Found ${filteredMemories.length} relevant memories`);
+			logger.info(`Found ${filteredMemories.length} relevant memories`);
 
 			return filteredMemories;
 		} catch (error) {
-			console.error("Failed to search memories:", error);
+			logger.error("Failed to search memories:", error);
 			throw new Error(
 				`Failed to search memories: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
@@ -226,7 +227,7 @@ export class MemoryService {
 	 */
 	async getMemory(memoryId: number): Promise<MemoryResult | null> {
 		try {
-			console.log(`Retrieving memory with ID: ${memoryId}`);
+			logger.info(`Retrieving memory with ID: ${memoryId}`);
 
 			// Direct lookup in Eizen by vector ID
 			const vector = await this.eizenService.getVector(memoryId);
@@ -242,7 +243,7 @@ export class MemoryService {
 				metadata: vector.metadata,
 			};
 		} catch (error) {
-			console.error(`Failed to retrieve memory ${memoryId}:`, error);
+			logger.error(`Failed to retrieve memory ${memoryId}:`, error);
 			throw new Error(
 				`Failed to retrieve memory: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
@@ -279,7 +280,7 @@ export class MemoryService {
 				isInitialized: eizenStats.isInitialized && embeddingInfo.isInitialized,
 			};
 		} catch (error) {
-			console.error("Failed to get memory stats:", error);
+			logger.error("Failed to get memory stats:", error);
 			return {
 				totalMemories: 0,
 				embeddingService: "unavailable",
@@ -309,12 +310,12 @@ export class MemoryService {
 	 */
 	private async textToEmbeddings(text: string): Promise<number[]> {
 		try {
-			console.log("Converting text to embeddings using Xenova/transformers");
+			logger.info("Converting text to embeddings using Xenova/transformers");
 
 			const result = await embeddingService.textToEmbeddings(text);
 			return result.embeddings;
 		} catch (error) {
-			console.error("Failed to generate embeddings:", error);
+			logger.error("Failed to generate embeddings:", error);
 			throw new Error(
 				`Failed to generate embeddings: ${error instanceof Error ? error.message : "Unknown error"}`
 			);

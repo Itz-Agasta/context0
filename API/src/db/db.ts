@@ -2,6 +2,7 @@ import "dotenv/config";
 
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import { logger } from "../config/winston.js";
 import * as keySchema from "./schema/keys.js";
 import * as subscriptionSchema from "./schema/subscriptions.js";
 import * as userSchema from "./schema/users.js";
@@ -18,7 +19,7 @@ let client: ReturnType<typeof postgres> | null = null;
 let db: unknown;
 
 if (!connectionString) {
-	console.warn(
+	logger.warn(
 		"DATABASE_URL environment variable is not set. Database operations are disabled."
 	);
 
@@ -58,9 +59,9 @@ export async function initializeDatabase(): Promise<void> {
 
 	try {
 		await client`SELECT 1`;
-		console.info("Database connection established.");
+		logger.info("Database connection established.");
 	} catch (err) {
-		console.error(
+		logger.error(
 			"Database connectivity check failed:",
 			err instanceof Error ? err.message : String(err)
 		);

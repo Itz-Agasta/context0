@@ -1,4 +1,5 @@
 import { Redis } from "ioredis";
+import { logger } from "./winston.js";
 
 /**
  * Initializes Redis connection based on environment
@@ -34,7 +35,7 @@ export async function initializeRedis(): Promise<Redis | undefined> {
 			// No password for local development
 		};
 
-		console.log(
+		logger.info(
 			`Development mode: Connecting to local Redis at ${redisConfig.host}:${redisConfig.port}...`
 		);
 	} else {
@@ -44,7 +45,7 @@ export async function initializeRedis(): Promise<Redis | undefined> {
 		const redisPassword = process.env.REDIS_AUTH_KEY;
 
 		if (!(redisHost && redisPort)) {
-			console.log(
+			logger.info(
 				"No Redis configuration provided for production, proceeding without Redis cache"
 			);
 			return;
@@ -56,7 +57,7 @@ export async function initializeRedis(): Promise<Redis | undefined> {
 			password: redisPassword,
 		};
 
-		console.log(
+		logger.info(
 			`Production mode: Connecting to AWS Redis at ${redisConfig.host}:${redisConfig.port}...`
 		);
 	}
@@ -91,7 +92,7 @@ export async function initializeRedis(): Promise<Redis | undefined> {
 
 		redis.on("ready", () => {
 			const envLabel = nodeEnv === "development" ? "🔧 Local" : "🚀 AWS";
-			console.log(`✅ ${envLabel} Redis connected successfully for caching`);
+			logger.info(`✅ ${envLabel} Redis connected successfully for caching`);
 			hasLoggedDisconnection = false; // Reset flag when connected
 		});
 
@@ -99,7 +100,7 @@ export async function initializeRedis(): Promise<Redis | undefined> {
 			// Only log disconnect once until reconnection
 			if (!hasLoggedDisconnection) {
 				const envLabel = nodeEnv === "development" ? "Local" : "AWS";
-				console.warn(`⚠️ ${envLabel} Redis connection lost`);
+				logger.warn(`⚠️ ${envLabel} Redis connection lost`);
 				hasLoggedDisconnection = true;
 			}
 		});
@@ -109,12 +110,12 @@ export async function initializeRedis(): Promise<Redis | undefined> {
 		// Test initial connection
 		await redis.ping();
 		const envLabel = nodeEnv === "development" ? "Local" : "AWS";
-		console.log(`Redis ping successful - ${envLabel} connection established`);
+		logger.info(`Redis ping successful - ${envLabel} connection established`);
 
 		return redis;
 	} catch (error) {
 		const envLabel = nodeEnv === "development" ? "Local" : "AWS";
-		console.warn(
+		logger.warn(
 			`❌ ${envLabel} Redis initial connection failed, proceeding without caching`,
 			error
 		);

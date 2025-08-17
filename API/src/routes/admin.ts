@@ -6,6 +6,7 @@ import { createMemorySchema, searchMemorySchema } from "../schemas/memory.js";
 import { EizenService } from "../services/EizenService.js";
 import { MemoryService } from "../services/MemoryService.js";
 import { errorResponse, successResponse } from "../utils/responses.js";
+import { logger } from "../config/winston.js";
 
 /**
  * ADMIN ROUTES - context0 Memory Service Administration
@@ -84,7 +85,7 @@ router.post(
 				.status(201)
 				.json(successResponse(result, "Memory created successfully"));
 		} catch (error) {
-			console.error("Admin memory creation error:", error);
+			logger.error("Admin memory creation error:", error);
 			res
 				.status(500)
 				.json(
@@ -139,7 +140,7 @@ router.post(
 				successResponse(results, `Found ${results.length} similar memories`)
 			);
 		} catch (error) {
-			console.error("Admin memory search error:", error);
+			logger.error("Admin memory search error:", error);
 			res
 				.status(500)
 				.json(
@@ -185,7 +186,7 @@ router.get("/memories/count/:contractId", async (req, res) => {
 			)
 		);
 	} catch (error) {
-		console.error("Memory count check error:", error);
+		logger.error("Memory count check error:", error);
 		res
 			.status(500)
 			.json(
@@ -224,7 +225,7 @@ router.post("/deploy", auth, async (_req, res) => {
 				successResponse({ contractId }, "Eizen contract deployed successfully")
 			);
 	} catch (error) {
-		console.error("Admin contract deploy error:", error);
+		logger.error("Admin contract deploy error:", error);
 		res
 			.status(500)
 			.json(
@@ -305,7 +306,7 @@ router.post("/test-deploy", auth, async (req, res) => {
 				)
 			);
 	} catch (error) {
-		console.error("Admin deploy test error:", error);
+		logger.error("Admin deploy test error:", error);
 		res
 			.status(500)
 			.json(
@@ -388,7 +389,7 @@ router.get("/test-deploy-status", auth, async (req, res) => {
 				);
 		}
 	} catch (error) {
-		console.error("Admin deploy status test error:", error);
+		logger.error("Admin deploy status test error:", error);
 		res
 			.status(500)
 			.json(

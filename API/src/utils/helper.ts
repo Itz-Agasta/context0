@@ -10,6 +10,7 @@
 
 import { Redis } from "ioredis";
 import type { JWKInterface, Warp } from "warp-contracts";
+import { logger } from "../config/winston.js";
 
 /**
  * Checks if ArLocal is running on the specified port
@@ -60,10 +61,10 @@ export async function validateWalletAddress(
 	const walletAddress = await warp.arweave.wallets.jwkToAddress(wallet);
 
 	if (walletAddress !== expectedAddress) {
-		console.error("❌ Wallet address mismatch detected!");
-		console.error(`Expected: ${expectedAddress}`);
-		console.error(`Loaded:   ${walletAddress}`);
-		console.error(`Source:   ${walletSource}`);
+		logger.error("❌ Wallet address mismatch detected!");
+		logger.error(`Expected: ${expectedAddress}`);
+		logger.error(`Loaded:   ${walletAddress}`);
+		logger.error(`Source:   ${walletSource}`);
 		throw new Error(
 			`Wallet address mismatch. Expected '${expectedAddress}' but loaded wallet has address '${walletAddress}'. Please verify the wallet file and expected address are correct.`
 		);
@@ -218,7 +219,7 @@ export async function checkWalletBalance(
 			readableBalance,
 		};
 	} catch (error) {
-		console.error("Error checking wallet balance:", error);
+		logger.error("Error checking wallet balance:", error);
 		// If we can't check balance, assume it's insufficient
 		return {
 			hasBalance: false,
@@ -243,11 +244,11 @@ export async function logWalletBalanceAfterOperation(
 ): Promise<void> {
 	try {
 		const balanceInfo = await checkWalletBalance(warp, wallet);
-		console.log(
+		logger.info(
 			`Wallet balance after ${operationType}: ${balanceInfo.readableBalance} AR (${balanceInfo.walletAddress})`
 		);
 	} catch (balanceError) {
-		console.warn(
+		logger.warn(
 			`Could not check wallet balance after ${operationType}:`,
 			balanceError
 		);

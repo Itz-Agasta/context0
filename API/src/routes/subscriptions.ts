@@ -7,6 +7,7 @@ import {
 } from "../db/schema/subscriptions.js";
 import { usersTable } from "../db/schema/users.js";
 import { auth } from "../middlewares/auth.js";
+import { logger } from "../config/winston.js";
 
 const router = Router();
 
@@ -68,7 +69,7 @@ router.get("/", auth, async (req, res) => {
 			data: subscription[0],
 		});
 	} catch (error) {
-		console.error("Error fetching subscription:", error);
+		logger.error("Error fetching subscription:", error);
 		res.status(500).json({
 			success: false,
 			message: "Internal server error",
@@ -224,7 +225,7 @@ router.post("/", auth, async (req, res) => {
 			message: "Subscription created successfully",
 		});
 	} catch (error) {
-		console.error("Error creating subscription:", error);
+		logger.error("Error creating subscription:", error);
 		res.status(500).json({
 			success: false,
 			message: "Internal server error",

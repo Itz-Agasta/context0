@@ -10,6 +10,7 @@ import {
 	updateLastUsedAt,
 } from "../services/SubscriptionService.js";
 import { errorResponse, successResponse } from "../utils/responses.js";
+import { logger } from "../config/winston.js";
 
 //  User-facing semantic memory API
 
@@ -32,7 +33,7 @@ async function getUserMemoryService(
 	const contract = req.contract;
 	const contractId = contract?.contractId;
 	if (!contractId) {
-		console.error("No contract ID found in request");
+		logger.error("No contract ID found in request");
 		return;
 	}
 
@@ -107,7 +108,7 @@ router.post(
 			// Update quota usage after successful memory creation
 			const quotaUpdate = await incrementQuotaUsage(clerkId, 1);
 			if (!quotaUpdate.success) {
-				console.error(
+				logger.error(
 					"Failed to update quota after memory creation:",
 					quotaUpdate.error
 				);
@@ -119,7 +120,7 @@ router.post(
 				.status(201)
 				.json(successResponse(result, "Memory created successfully"));
 		} catch (error) {
-			console.error("Memory creation error:", error);
+			logger.error("Memory creation error:", error);
 			res
 				.status(500)
 				.json(
@@ -189,7 +190,7 @@ router.get(
 				successResponse(results, `Found ${results.length} relevant memories`)
 			);
 		} catch (error) {
-			console.error("Memory search error:", error);
+			logger.error("Memory search error:", error);
 
 			if (error instanceof SyntaxError) {
 				res
@@ -254,7 +255,7 @@ router.post(
 				successResponse(results, `Found ${results.length} relevant memories`)
 			);
 		} catch (error) {
-			console.error("Memory search error:", error);
+			logger.error("Memory search error:", error);
 			res
 				.status(500)
 				.json(
@@ -326,7 +327,7 @@ router.get(
 
 			res.json(successResponse(memory, "Memory retrieved successfully"));
 		} catch (error) {
-			console.error("Memory get error:", error);
+			logger.error("Memory get error:", error);
 			res
 				.status(500)
 				.json(
@@ -361,7 +362,7 @@ router.get("/", verifyContractHashMiddleware, async (req, res) => {
 
 		res.json(successResponse(stats, "Memory statistics retrieved"));
 	} catch (error) {
-		console.error("Memory stats error:", error);
+		logger.error("Memory stats error:", error);
 		res
 			.status(500)
 			.json(

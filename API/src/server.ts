@@ -15,6 +15,7 @@ import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import { arLocalService } from "./config/arlocal.js";
+import { logger } from "./config/winston.js";
 import { initializeDatabase } from "./db/db.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { EizenService } from "./services/EizenService.js";
@@ -23,17 +24,17 @@ import { embeddingService } from "./services/EmbeddingService.js";
 dotenv.config();
 
 async function initializeServices() {
-	console.log("Initializing Context0 API...");
+	logger.info("Initializing Context0 API...");
 	// Start ArLocal first in development mode
 	if (process.env.NODE_ENV !== "production") {
-		console.log("Starting ArLocal for development environment...");
+		logger.info("Starting ArLocal for development environment...");
 		try {
 			if (!arLocalService.isArLocalRunning()) {
 				await arLocalService.start();
 			}
 		} catch (error) {
-			console.warn("⚠️ Failed to start ArLocal:", (error as Error).message);
-			console.warn("Continuing with testnet fallback...");
+			logger.warn("⚠️ Failed to start ArLocal:", (error as Error).message);
+			logger.warn("Continuing with testnet fallback...");
 		}
 	}
 	// Initialize vector embedding service first (required by other services)
@@ -43,7 +44,7 @@ async function initializeServices() {
 	// Initialize semantic search configuration (includes Redis initialization)
 	await EizenService.initEizenConfig();
 
-	console.log("Context0 is ready to handle user requests");
+	logger.info("Context0 is ready to handle user requests");
 }
 
 // Bootstrap application startup
@@ -116,15 +117,15 @@ initializeServices()
 		// Start HTTP server with graceful error handling
 		app
 			.listen(PORT, () => {
-				console.log(`Context0 API server running on port ${PORT}`);
-				console.log(`Health endpoint: http://localhost:${PORT}/health`);
+				logger.info(`Context0 API server running on port ${PORT}`);
+				logger.info(`Health endpoint: http://localhost:${PORT}/health`);
 			})
 			.on("error", (error) => {
-				console.error("❌ Failed to start server:", error.message);
+				logger.error("❌ Failed to start server:", error.message);
 				throw new Error(error.message);
 			});
 	})
 	.catch((error) => {
-		console.error("Failed to initialize services:", error);
+		logger.error("Failed to initialize services:", error);
 		process.exit(1);
 	});

@@ -5,6 +5,7 @@ import { subscriptionsTable } from "../db/schema/subscriptions.js";
 import { usersTable } from "../db/schema/users.js";
 import { auth } from "../middlewares/auth.js";
 import { verifyTransaction } from "../utils/etherscan.js";
+import { logger } from "../config/winston.js";
 
 /**
  * Webhook Routes for context0 API
@@ -64,7 +65,7 @@ webhook.post("/clerk/registered", async (req, res) => {
 		})
 		.returning();
 
-	console.log("User registered:", user);
+	logger.info("User registered:", user);
 	res.status(200).json({ message: "User registration received" });
 });
 
@@ -105,7 +106,7 @@ webhook.post("/payments/web3", auth, async (req, res) => {
 	const subscriptionPlan = req.body.subscriptionPlan;
 	const quotaLimit = req.body.quotaLimit || 1000; // Default quota limit if not provided
 
-	console.log("Receieved payment webhook:✅");
+	logger.info("Receieved payment webhook:✅");
 
 	// Validate authentication
 	if (!userId) {
@@ -131,7 +132,7 @@ webhook.post("/payments/web3", auth, async (req, res) => {
 	// Verify the blockchain transaction using Etherscan API
 	const verifyTxn = await verifyTransaction(txHash);
 	const result = verifyTxn.result;
-	console.log(result.data);
+	logger.info(result.data);
 
 	// Process payment if transaction is valid
 	if (result.isError === "0") {
@@ -153,7 +154,7 @@ webhook.post("/payments/web3", auth, async (req, res) => {
 				})
 				.where(eq(subscriptionsTable.clerkId, userId));
 
-			console.log("User subscription updated", userId);
+			logger.info("User subscription updated", userId);
 			res.status(200).json({ message: "Subscription updated", userId });
 			return;
 		}
@@ -167,10 +168,10 @@ webhook.post("/payments/web3", auth, async (req, res) => {
 			renewsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
 		});
 
-		console.log("User subscription created", userId);
+		logger.info("User subscription created", userId);
 		res.status(200).json({ message: "Subscription created", userId });
 		return;
 	}
-	console.error("Transaction error");
+	logger.error("Transaction error");
 	res.status(400).json({ txHash, error: result.errDescription });
 });

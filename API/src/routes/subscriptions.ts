@@ -158,6 +158,16 @@ router.post("/", auth, async (req, res) => {
 			return;
 		}
 
+		// Parse and validate renewsAt once and reuse the Date instance
+		const parsedRenewsAt = new Date(renewsAt);
+		if (Number.isNaN(parsedRenewsAt.getTime())) {
+			res.status(400).json({
+				success: false,
+				message: "Invalid renewsAt date",
+			});
+			return;
+		}
+
 		// Check if user exists
 		const userExists = await db
 			.select()
@@ -215,7 +225,7 @@ router.post("/", auth, async (req, res) => {
 				quotaLimit: finalQuotaLimit,
 				quotaUsed: 0,
 				isActive: true,
-				renewsAt: new Date(renewsAt),
+				renewsAt: parsedRenewsAt,
 			})
 			.returning();
 

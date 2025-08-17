@@ -63,9 +63,15 @@ initializeServices()
 		const PORT = Number.parseInt(process.env.PORT || "3000", 10);
 
 		// Configure CORS for multiple frontend environments
-		const allowedOrigins = process.env.ORIGIN?.split(",").map((origin) =>
-			origin.trim()
-		) || ["http://localhost:3000"];
+		const allowedOriginsEnv = process.env.ORIGIN
+			? process.env.ORIGIN
+				.split(",")
+				.map((o) => o.trim())
+				.filter((o) => o.length > 0)
+			: [];
+
+		const allowedOrigins =
+			allowedOriginsEnv.length > 0 ? allowedOriginsEnv : ["http://localhost:3000"];
 
 		const corsOptions: cors.CorsOptions = {
 			origin: (
@@ -76,7 +82,7 @@ initializeServices()
 				if (!origin || allowedOrigins.includes(origin)) {
 					callback(null, true);
 				} else {
-					callback(new Error("Not allowed by CORS"));
+					callback(new Error(`Not allowed by CORS: ${origin}`));
 				}
 			},
 			credentials: true, // Enable cookies and authentication headers

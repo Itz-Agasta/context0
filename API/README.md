@@ -1,6 +1,6 @@
 # Context0 API
 
-A semantic memory API service powered by vector embeddings and blockchain storage. Context0 provides memory management with AI-powered vector search (EizenDB), persistent storage on Arweave, Redis caching, and user/subscription management for Context0 project.
+A semantic memory API service powered by vector embeddings and blockchain storage. Context0 provides memory management with AI-powered vector search (EizenDB), persistent storage on Arweave, Redis caching, and user/subscription management for the Context0 project.
 
 ## Overview
 

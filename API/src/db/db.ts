@@ -13,10 +13,13 @@ const schema = {
 	...keySchema,
 };
 
+// Provide a compile-time type for the Drizzle DB object so callers get ergonomic typings.
+type DrizzleDB = ReturnType<typeof drizzle>;
+
 const connectionString = process.env.DATABASE_URL;
 
 let client: ReturnType<typeof postgres> | null = null;
-let db: unknown;
+let db: DrizzleDB;
 
 if (!connectionString) {
 	logger.warn(
@@ -40,11 +43,11 @@ if (!connectionString) {
 				);
 			},
 		}
-	);
+	) as unknown as DrizzleDB;
 } else {
 	// Disable prefetch as it is not supported for "Transaction" pool mode
 	client = postgres(connectionString, { prepare: false });
-	db = drizzle(client, { schema });
+	db = drizzle(client, { schema }) as DrizzleDB;
 }
 
 /**

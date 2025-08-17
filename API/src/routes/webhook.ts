@@ -48,20 +48,44 @@ export const webhook = express.Router();
 webhook.post("/clerk/registered", async (req, res) => {
 	// Extract user data from Clerk webhook payload
 	const userData = req.body.data;
-	const email = userData.email_addresses?.[0]?.email_address;
-	const fullName = `${userData.first_name} ${userData.last_name}`;
 	const clerkId = userData.id;
 
-	// Create new user record in database
+	// Normalize and validate email
+	const emailRaw = userData.email_addresses?.[0]?.email_address;
+	const email = typeof emailRaw === 'string' ? emailRaw.trim().toLowerCase() : null;
+	if (!email) {
+		res.status(400).json({ error: 'Missing or invalid email in webhook payload' });
+		return;
+	}
+
+	// Construct full name from available name parts (trim each and join)
+	const firstName = typeof userData.first_name === 'string' ? userData.first_name.trim() : '';
+	const lastName = typeof userData.last_name === 'string' ? userData.last_name.trim() : '';
+	const fullNameParts = [firstName, lastName].filter(Boolean);
+	const fullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : '';
+
+	// Create or update user record in database (idempotent for webhooks)
+	const now = new Date();
+	const insertValues = {
+		fullName,
+		email,
+		clerkId,
+		status: "active",
+		lastLoginAt: now,
+	};
+
+	// Use upsert to avoid duplicate key errors on retries and preserve metaMaskWalletAddress
 	const [user] = await db
 		.insert(usersTable)
-		.values({
-			fullName,
-			email,
-			clerkId,
-			metaMaskWalletAddress: "", // Placeholder, should be set after web3 pay
-			status: "active", // Default status
-			lastLoginAt: new Date(), // Set to current time
+		.values(insertValues)
+		.onConflictDoUpdate({
+			target: [usersTable.clerkId, usersTable.email],
+			set: {
+				fullName: insertValues.fullName,
+				email: insertValues.email,
+				status: insertValues.status,
+				lastLoginAt: insertValues.lastLoginAt,
+			},
 		})
 		.returning();
 

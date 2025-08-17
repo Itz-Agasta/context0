@@ -2,6 +2,7 @@ import { type Request, type Response, Router } from "express";
 import { auth } from "../middlewares/auth.js";
 import { deployForUser } from "../services/DeployService.js";
 import { errorResponse, successResponse } from "../utils/responses.js";
+import { logger } from "../config/winston.js";
 
 const router = Router();
 
@@ -65,18 +66,18 @@ router.post("/", async (req: Request, res: Response) => {
 			.json(
 				successResponse(
 					deploymentResult.data,
-					"Eizen contract deployed successfully",
-				),
+					"Eizen contract deployed successfully"
+				)
 			);
 	} catch (error) {
-		console.error("Contract deployment error:", error);
+		logger.error("Contract deployment error:", error);
 		res
 			.status(500)
 			.json(
 				errorResponse(
 					"Failed to deploy contract",
-					error instanceof Error ? error.message : "Unknown error",
-				),
+					error instanceof Error ? error.message : "Unknown error"
+				)
 			);
 	}
 });
@@ -140,8 +141,8 @@ router.get("/status", auth, async (req: Request, res: Response) => {
 						lastUsedAt: status.keyData.lastUsedAt,
 						isActive: status.keyData.isActive,
 					},
-					"Deployment status retrieved",
-				),
+					"Deployment status retrieved"
+				)
 			);
 		} else {
 			// User has no deployment
@@ -150,15 +151,15 @@ router.get("/status", auth, async (req: Request, res: Response) => {
 				.json(successResponse({ hasDeployment: false }, "No deployment found"));
 		}
 	} catch (error) {
-		console.error("Error checking deployment status:", error);
+		logger.error("Error checking deployment status:", error);
 
 		res
 			.status(500)
 			.json(
 				errorResponse(
 					"Failed to check deployment status",
-					error instanceof Error ? error.message : "Unknown error",
-				),
+					error instanceof Error ? error.message : "Unknown error"
+				)
 			);
 	}
 });

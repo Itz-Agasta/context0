@@ -11,7 +11,7 @@ export interface ApiResponse<T = unknown> {
  */
 export function successResponse<T>(
 	data: T,
-	message = "Success",
+	message = "Success"
 ): ApiResponse<T> {
 	return {
 		success: true,
@@ -38,7 +38,7 @@ export function errorResponse(message: string, error?: string): ApiResponse {
  */
 export function validationErrorResponse(
 	errors: Array<{ path: (string | number)[]; message: string; code: string }>,
-	message = "Validation failed",
+	message = "Validation failed"
 ): ApiResponse & { errors: typeof errors } {
 	return {
 		success: false,

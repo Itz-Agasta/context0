@@ -40,5 +40,5 @@ export const usersTable = pgTable(
 	},
 	(table) => ({
 		clerkIdIdx: index("clerk_id_idx").on(table.clerkId),
-	}),
+	})
 );

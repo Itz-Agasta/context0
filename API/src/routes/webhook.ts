@@ -5,6 +5,7 @@ import { subscriptionsTable } from "../db/schema/subscriptions.js";
 import { usersTable } from "../db/schema/users.js";
 import { auth } from "../middlewares/auth.js";
 import { verifyTransaction } from "../utils/etherscan.js";
+import { logger } from "../config/winston.js";
 
 /**
  * Webhook Routes for context0 API
@@ -45,27 +46,51 @@ export const webhook = express.Router();
  * }
  */
 webhook.post("/clerk/registered", async (req, res) => {
-  // Extract user data from Clerk webhook payload
-  const userData = req.body.data;
-  const email = userData.email_addresses?.[0]?.email_address;
-  const fullName = `${userData.first_name} ${userData.last_name}`;
-  const clerkId = userData.id;
+	// Extract user data from Clerk webhook payload
+	const userData = req.body.data;
+	const clerkId = userData.id;
 
-  // Create new user record in database
-  const [user] = await db
-    .insert(usersTable)
-    .values({
-      fullName,
-      email,
-      clerkId,
-      metaMaskWalletAddress: "", // Placeholder, should be set after web3 pay
-      status: "active", // Default status
-      lastLoginAt: new Date(), // Set to current time
-    })
-    .returning();
+	// Normalize and validate email
+	const emailRaw = userData.email_addresses?.[0]?.email_address;
+	const email = typeof emailRaw === 'string' ? emailRaw.trim().toLowerCase() : null;
+	if (!email) {
+		res.status(400).json({ error: 'Missing or invalid email in webhook payload' });
+		return;
+	}
 
-  console.log("User registered:", user);
-  res.status(200).json({ message: "User registration received" });
+	// Construct full name from available name parts (trim each and join)
+	const firstName = typeof userData.first_name === 'string' ? userData.first_name.trim() : '';
+	const lastName = typeof userData.last_name === 'string' ? userData.last_name.trim() : '';
+	const fullNameParts = [firstName, lastName].filter(Boolean);
+	const fullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : '';
+
+	// Create or update user record in database (idempotent for webhooks)
+	const now = new Date();
+	const insertValues = {
+		fullName,
+		email,
+		clerkId,
+		status: "active",
+		lastLoginAt: now,
+	};
+
+	// Use upsert to avoid duplicate key errors on retries and preserve metaMaskWalletAddress
+	const [user] = await db
+		.insert(usersTable)
+		.values(insertValues)
+		.onConflictDoUpdate({
+			target: [usersTable.clerkId, usersTable.email],
+			set: {
+				fullName: insertValues.fullName,
+				email: insertValues.email,
+				status: insertValues.status,
+				lastLoginAt: insertValues.lastLoginAt,
+			},
+		})
+		.returning();
+
+	logger.info("User registered:", user);
+	res.status(200).json({ message: "User registration received" });
 });
 
 /**
@@ -99,79 +124,78 @@ webhook.post("/clerk/registered", async (req, res) => {
  * 5. Set 30-day renewal period
  */
 webhook.post("/payments/web3", auth, async (req, res) => {
-  // Extract payment data from request
-  const txHash = req.body.txHash;
-  const userId = req.userId; // Set by auth middleware
-  const subscriptionPlan = req.body.subscriptionPlan;
-  const quotaLimit = req.body.quotaLimit || 1000; // Default quota limit if not provided
+	// Extract payment data from request
+	const txHash = req.body.txHash;
+	const userId = req.userId; // Set by auth middleware
+	const subscriptionPlan = req.body.subscriptionPlan;
+	const quotaLimit = req.body.quotaLimit || 1000; // Default quota limit if not provided
 
-  console.log("Receieved payment webhook:✅");
+	logger.info("Receieved payment webhook:✅");
 
-  // Validate authentication
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
+	// Validate authentication
+	if (!userId) {
+		res.status(401).json({ error: "Unauthorized" });
+		return;
+	}
 
-  // Verify user exists in database
-  const user = await db.query.usersTable.findFirst({
-    where: eq(usersTable.clerkId, userId),
-  });
-  if (!user) {
-    res.status(404).json({ error: "User not found" });
-    return;
-  }
+	// Verify user exists in database
+	const user = await db.query.usersTable.findFirst({
+		where: eq(usersTable.clerkId, userId),
+	});
+	if (!user) {
+		res.status(404).json({ error: "User not found" });
+		return;
+	}
 
-  // Validate required payment parameters
-  if (!txHash || !userId || !subscriptionPlan) {
-    res.status(400).json({ error: "Missing required fields" });
-    return;
-  }
+	// Validate required payment parameters
+	if (!(txHash && userId && subscriptionPlan)) {
+		res.status(400).json({ error: "Missing required fields" });
+		return;
+	}
 
-  // Verify the blockchain transaction using Etherscan API
-  const verifyTxn = await verifyTransaction(txHash);
-  const result = verifyTxn.result;
-  console.log(result.data);
+	// Verify the blockchain transaction using Etherscan API
+	const verifyTxn = await verifyTransaction(txHash);
+	const result = verifyTxn.result;
+	logger.info(result.data);
 
-  // Process payment if transaction is valid
-  if (result.isError === "0") {
-    // Check if user already has a subscription
-    const findSubscription = await db.query.subscriptionsTable.findFirst({
-      where: eq(subscriptionsTable.clerkId, userId),
-    });
+	// Process payment if transaction is valid
+	if (result.isError === "0") {
+		// Check if user already has a subscription
+		const findSubscription = await db.query.subscriptionsTable.findFirst({
+			where: eq(subscriptionsTable.clerkId, userId),
+		});
 
-    if (findSubscription) {
-      // Update existing subscription with new plan and reset quota
-      await db
-        .update(subscriptionsTable)
-        .set({
-          plan: subscriptionPlan,
-          quotaLimit,
-          isActive: true,
-          renewsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-          quotaUsed: 0, // Reset usage counter
-        })
-        .where(eq(subscriptionsTable.clerkId, userId));
+		if (findSubscription) {
+			// Update existing subscription with new plan and reset quota
+			await db
+				.update(subscriptionsTable)
+				.set({
+					plan: subscriptionPlan,
+					quotaLimit,
+					isActive: true,
+					renewsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+					quotaUsed: 0, // Reset usage counter
+				})
+				.where(eq(subscriptionsTable.clerkId, userId));
 
-      console.log("User subscription updated", userId);
-      res.status(200).json({ message: "Subscription updated", userId });
-      return;
-    }
+			logger.info("User subscription updated", userId);
+			res.status(200).json({ message: "Subscription updated", userId });
+			return;
+		}
 
-    // Create new subscription for first-time subscriber
-    await db.insert(subscriptionsTable).values({
-      clerkId: userId,
-      plan: subscriptionPlan,
-      quotaLimit,
-      isActive: true,
-      renewsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-    });
+		// Create new subscription for first-time subscriber
+		await db.insert(subscriptionsTable).values({
+			clerkId: userId,
+			plan: subscriptionPlan,
+			quotaLimit,
+			isActive: true,
+			renewsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+		});
 
-    console.log("User subscription created", userId);
-    res.status(200).json({ message: "Subscription created", userId });
-    return;
-  } else {
-    console.error("Transaction error");
-    res.status(400).json({ txHash, error: result.errDescription });
-  }
+		logger.info("User subscription created", userId);
+		res.status(200).json({ message: "Subscription created", userId });
+		return;
+	}
+	logger.error("Transaction error");
+	res.status(400).json({ txHash, error: result.errDescription });
 });

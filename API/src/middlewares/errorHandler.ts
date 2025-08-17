@@ -2,14 +2,15 @@ import { STATUS_CODES } from "node:http";
 import type { NextFunction, Request, Response } from "express";
 import httpErrors from "http-errors";
 import { errorResponse } from "../utils/responses.js";
+import { logger } from "../config/winston.js";
 
 export function errorHandler(
 	err: unknown,
 	_req: Request,
 	res: Response,
-	next: NextFunction,
+	next: NextFunction
 ) {
-	console.error("Global error handler:", err);
+	logger.error("Global error handler:", err);
 
 	// If headers were already sent, delegate to Express default error handler
 	if (res.headersSent) {
@@ -24,7 +25,7 @@ export function errorHandler(
 
 	const response = errorResponse(
 		statusMessage,
-		err instanceof Error ? err.message : "Unknown error",
+		err instanceof Error ? err.message : "Unknown error"
 	);
 
 	res.status(status).json(response);

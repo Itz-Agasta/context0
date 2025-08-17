@@ -9,7 +9,7 @@
     "build": "tsc && tsc-alias -f",
     "start": "node --env-file .env dist/server.js",
     "clean": "rm -rf dist",
-    "check": "biome check --write .",
+    "format": "ultracite format",
     "check:ci": "biome check .",
     "db:studio": "drizzle-kit studio",
     "db:gen": "drizzle-kit generate",
@@ -18,7 +18,7 @@
   },
   "keywords": [],
   "author": "Agasta",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
     "@xenova/transformers": "^2.17.2",
@@ -41,10 +41,11 @@
     "warp-contracts": "^1.4.45",
     "warp-contracts-plugin-deploy": "^1.0.13",
     "warp-contracts-redis": "^0.4.2",
+    "winston": "^3.17.0",
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.0",
+    "@biomejs/biome": "2.2.0",
     "@tsconfig/node23": "^23.0.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
@@ -59,6 +60,7 @@
     "drizzle-kit": "^0.31.2",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "ultracite": "5.2.3"
   }
 }

@@ -4,6 +4,7 @@ import { embeddingService } from "../services/EmbeddingService.js";
 import { MemoryService } from "../services/MemoryService.js";
 import { checkRedisConnectivity } from "../utils/helper.js";
 import { errorResponse, successResponse } from "../utils/responses.js";
+import { logger } from "../config/winston.js";
 
 const router = Router();
 
@@ -20,8 +21,8 @@ router.get("/", (_req, res) => {
 				uptime: process.uptime(),
 				service: "Context0 API",
 			},
-			"API is healthy",
-		),
+			"API is healthy"
+		)
 	);
 });
 
@@ -42,7 +43,7 @@ router.get("/detailed", async (_req, res) => {
 				const eizenService = await EizenService.forContract(fallbackContractId);
 				eizenStats = await eizenService.getStats();
 			} catch (error) {
-				console.warn("Could not get Eizen stats for health check:", error);
+				logger.warn("Could not get Eizen stats for health check:", error);
 			}
 		}
 
@@ -54,7 +55,7 @@ router.get("/detailed", async (_req, res) => {
 				const memoryService = new MemoryService(eizenService);
 				memoryStats = await memoryService.getStats();
 			} catch (error) {
-				console.warn("Could not get Memory stats for health check:", error);
+				logger.warn("Could not get Memory stats for health check:", error);
 			}
 		}
 
@@ -81,7 +82,7 @@ router.get("/detailed", async (_req, res) => {
 			hasEizenContract: !!process.env.EIZEN_CONTRACT_ID,
 			redis: redisStatus,
 			cors: {
-				allowedOrigins: allowedOrigins,
+				allowedOrigins,
 				credentialsEnabled: true,
 				originCount: allowedOrigins.length,
 			},
@@ -137,14 +138,14 @@ router.get("/detailed", async (_req, res) => {
 
 		res.json(successResponse(healthData, "Detailed health check completed"));
 	} catch (error) {
-		console.error("Health check error:", error);
+		logger.error("Health check error:", error);
 		res
 			.status(503)
 			.json(
 				errorResponse(
 					"Service degraded",
-					error instanceof Error ? error.message : "Unknown error",
-				),
+					error instanceof Error ? error.message : "Unknown error"
+				)
 			);
 	}
 });
@@ -174,8 +175,8 @@ router.get("/eizen", async (_req, res) => {
 							efSearch: process.env.EIZEN_EF_SEARCH || 50,
 						},
 					},
-					"Eizen service health check",
-				),
+					"Eizen service health check"
+				)
 			);
 			return;
 		}
@@ -197,18 +198,18 @@ router.get("/eizen", async (_req, res) => {
 					},
 					architecture: "multi-tenant",
 				},
-				"Eizen service health check",
-			),
+				"Eizen service health check"
+			)
 		);
 	} catch (error) {
-		console.error("Eizen health check error:", error);
+		logger.error("Eizen health check error:", error);
 		res
 			.status(503)
 			.json(
 				errorResponse(
 					"Eizen service error",
-					error instanceof Error ? error.message : "Unknown error",
-				),
+					error instanceof Error ? error.message : "Unknown error"
+				)
 			);
 	}
 });
@@ -239,8 +240,8 @@ router.get("/memory", async (_req, res) => {
 							? embeddingService.getInfo().model
 							: "unavailable",
 					},
-					"Memory service health check",
-				),
+					"Memory service health check"
+				)
 			);
 			return;
 		}
@@ -264,18 +265,18 @@ router.get("/memory", async (_req, res) => {
 					},
 					architecture: "multi-tenant",
 				},
-				"Memory service health check",
-			),
+				"Memory service health check"
+			)
 		);
 	} catch (error) {
-		console.error("Memory health check error:", error);
+		logger.error("Memory health check error:", error);
 		res
 			.status(503)
 			.json(
 				errorResponse(
 					"Memory service error",
-					error instanceof Error ? error.message : "Unknown error",
-				),
+					error instanceof Error ? error.message : "Unknown error"
+				)
 			);
 	}
 });

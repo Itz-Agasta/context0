@@ -14,6 +14,7 @@ import {
 	getWalletRechargeInstructions,
 	logWalletBalanceAfterOperation,
 } from "../utils/helper.js";
+import { logger } from "../config/winston.js";
 
 export interface EizenSearchResult {
 	id: number;
@@ -127,37 +128,37 @@ export class EizenService {
 		const arweaveConfig = await EizenService.getSharedArweaveConfig();
 
 		try {
-			console.log("Deploying new Eizen contract...");
+			logger.info("Deploying new Eizen contract...");
 
 			// Get wallet address that will be used for deployment
 			const walletAddress = await arweaveConfig.warp.arweave.wallets.getAddress(
-				arweaveConfig.wallet,
+				arweaveConfig.wallet
 			);
 
 			// Check wallet balance before attempting deployment
 			const balanceInfo = await checkWalletBalance(
 				arweaveConfig.warp,
-				arweaveConfig.wallet,
+				arweaveConfig.wallet
 			);
-			console.log(
-				`Wallet balance check: ${balanceInfo.readableBalance} AR (${balanceInfo.walletAddress})`,
+			logger.info(
+				`Wallet balance check: ${balanceInfo.readableBalance} AR (${balanceInfo.walletAddress})`
 			);
 
 			if (!balanceInfo.hasBalance) {
 				const rechargeInfo = getWalletRechargeInstructions(
-					balanceInfo.walletAddress,
+					balanceInfo.walletAddress
 				);
 
 				if (!rechargeInfo.isProduction) {
 					throw new Error(
 						`Insufficient wallet balance for deployment. Current balance: ${balanceInfo.readableBalance} AR. ` +
 							`💡 Dev tip: ${rechargeInfo.tip}
-Command: ${rechargeInfo.instructions}`,
+Command: ${rechargeInfo.instructions}`
 					);
 				}
 
 				throw new Error(
-					`Insufficient wallet balance for deployment. Current balance: ${balanceInfo.readableBalance} AR. ${rechargeInfo.instructions}`,
+					`Insufficient wallet balance for deployment. Current balance: ${balanceInfo.readableBalance} AR. ${rechargeInfo.instructions}`
 				);
 			}
 
@@ -170,20 +171,20 @@ Command: ${rechargeInfo.instructions}`,
 				// Production: Use EizenDbVector.deploy() for mainnet
 				const result = await EizenDbVector.deploy(
 					arweaveConfig.wallet,
-					arweaveConfig.warp,
+					arweaveConfig.warp
 				);
 				contractTxId = result.contractTxId;
 			} else {
 				// Development with Arlocal Use warp.deploy() with embedded contract source
-				console.log("Using Arlocal TestNet for deployment");
+				logger.info("Using Arlocal TestNet for deployment");
 
 				// Read contract source and state from data folder
 				const contractSource = readFileSync(
 					join(process.cwd(), "data", "contract.js"),
-					"utf8",
+					"utf8"
 				);
 				const initialState = JSON.parse(
-					readFileSync(join(process.cwd(), "data", "state.json"), "utf8"),
+					readFileSync(join(process.cwd(), "data", "state.json"), "utf8")
 				);
 
 				// Set the owner to our wallet address
@@ -203,23 +204,23 @@ Command: ${rechargeInfo.instructions}`,
 				contractTxId = result.contractTxId;
 			}
 
-			console.log(`Eizen contract deployed successfully: ${contractTxId}`);
+			logger.info(`Eizen contract deployed successfully: ${contractTxId}`);
 
 			// Check wallet balance after successful deployment
 			await logWalletBalanceAfterOperation(
 				arweaveConfig.warp,
 				arweaveConfig.wallet,
-				"deployment",
+				"deployment"
 			);
 
 			return {
 				contractId: contractTxId,
-				walletAddress: walletAddress,
+				walletAddress,
 			};
 		} catch (error) {
-			console.error("Failed to deploy contract:", error);
+			logger.error("Failed to deploy contract:", error);
 			throw new Error(
-				`Failed to deploy contract: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to deploy contract: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}
@@ -280,7 +281,7 @@ Command: ${rechargeInfo.instructions}`,
 	 */
 	private async initialize(): Promise<void> {
 		try {
-			console.log(`Initializing EizenService for contract: ${this.contractId}`);
+			logger.info(`Initializing EizenService for contract: ${this.contractId}`);
 
 			// Step 1: Get shared Arweave configuration
 			const arweaveConfig = await EizenService.getSharedArweaveConfig();
@@ -289,7 +290,7 @@ Command: ${rechargeInfo.instructions}`,
 			this.sdk = new SetSDK<string>(
 				arweaveConfig.wallet,
 				this.contractId,
-				arweaveConfig.warp,
+				arweaveConfig.warp
 			);
 
 			// Step 3: Configure HNSW algorithm parameters from environment or use defaults
@@ -299,16 +300,16 @@ Command: ${rechargeInfo.instructions}`,
 			this.vectorDb = new EizenDbVector<VectorMetadata>(this.sdk, options);
 
 			this.isInitialized = true;
-			console.log(
-				`EizenService initialized successfully for contract: ${this.contractId}`,
+			logger.info(
+				`EizenService initialized successfully for contract: ${this.contractId}`
 			);
-			console.log(
-				`HNSW Parameters: m=${options.m}, efConstruction=${options.efConstruction}, efSearch=${options.efSearch}`,
+			logger.info(
+				`HNSW Parameters: m=${options.m}, efConstruction=${options.efConstruction}, efSearch=${options.efSearch}`
 			);
 		} catch (error) {
-			console.error(
+			logger.error(
 				`EizenService initialization failed for contract ${this.contractId}:`,
-				error,
+				error
 			);
 			throw error;
 		}
@@ -374,7 +375,7 @@ Command: ${rechargeInfo.instructions}`,
 		}
 
 		try {
-			console.log(`Inserting vector with ${data.vector.length} dimensions`);
+			logger.info(`Inserting vector with ${data.vector.length} dimensions`);
 
 			// Get the next ID before insertion from the underlying database
 			const vectorId = await this.vectorDb.db.get_datasize();
@@ -382,14 +383,14 @@ Command: ${rechargeInfo.instructions}`,
 			// Insert vector into the HNSW index with associated metadata
 			await this.vectorDb.insert(data.vector, data.metadata);
 
-			console.log(`Vector inserted successfully with ID: ${vectorId}`);
+			logger.info(`Vector inserted successfully with ID: ${vectorId}`);
 
 			// Check wallet balance after successful insert
 			const arweaveConfig = await EizenService.getSharedArweaveConfig();
 			await logWalletBalanceAfterOperation(
 				arweaveConfig.warp,
 				arweaveConfig.wallet,
-				"insert",
+				"insert"
 			);
 
 			return {
@@ -398,9 +399,9 @@ Command: ${rechargeInfo.instructions}`,
 				message: `Vector inserted successfully with ID: ${vectorId}`,
 			};
 		} catch (error) {
-			console.error("Failed to insert vector:", error);
+			logger.error("Failed to insert vector:", error);
 			throw new Error(
-				`Failed to insert vector: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to insert vector: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}
@@ -445,12 +446,12 @@ Command: ${rechargeInfo.instructions}`,
 		}
 
 		try {
-			console.log(`Searching for ${data.k} nearest neighbors`);
+			logger.info(`Searching for ${data.k} nearest neighbors`);
 
 			// Perform k-nearest neighbor search using HNSW algorithm
 			const results = await this.vectorDb.knn_search(data.query, data.k);
 
-			console.log(`Found ${results.length} similar vectors`);
+			logger.info(`Found ${results.length} similar vectors`);
 
 			// Transform results to match our interface
 			return results.map((result) => ({
@@ -459,9 +460,9 @@ Command: ${rechargeInfo.instructions}`,
 				metadata: result.metadata || undefined,
 			}));
 		} catch (error) {
-			console.error("Failed to search vectors:", error);
+			logger.error("Failed to search vectors:", error);
 			throw new Error(
-				`Failed to search vectors: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to search vectors: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}
@@ -490,7 +491,7 @@ Command: ${rechargeInfo.instructions}`,
 	 * @throws {Error} When the service is not initialized or retrieval fails
 	 */
 	async getVector(
-		vectorId: number,
+		vectorId: number
 	): Promise<{ point: VectorEmbedding; metadata?: VectorMetadata } | null> {
 		await this.ensureInitialized();
 
@@ -499,25 +500,25 @@ Command: ${rechargeInfo.instructions}`,
 		}
 
 		try {
-			console.log(`Retrieving vector with ID: ${vectorId}`);
+			logger.info(`Retrieving vector with ID: ${vectorId}`);
 
 			// Fetch vector data by ID from the database
 			const result = await this.vectorDb.get_vector(vectorId);
 
 			if (result) {
-				console.log(`Vector ${vectorId} retrieved successfully`);
+				logger.info(`Vector ${vectorId} retrieved successfully`);
 				return {
 					point: result.point,
 					metadata: result.metadata || undefined,
 				};
 			}
 
-			console.log(`Vector ${vectorId} not found`);
+			logger.info(`Vector ${vectorId} not found`);
 			return null;
 		} catch (error) {
-			console.error(`Failed to retrieve vector ${vectorId}:`, error);
+			logger.error(`Failed to retrieve vector ${vectorId}:`, error);
 			throw new Error(
-				`Failed to retrieve vector: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to retrieve vector: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}
@@ -596,13 +597,13 @@ Command: ${rechargeInfo.instructions}`,
 			this.vectorDb = null;
 			this.sdk = null;
 
-			console.log(
-				`EizenService cleanup completed for contract: ${this.contractId}`,
+			logger.info(
+				`EizenService cleanup completed for contract: ${this.contractId}`
 			);
 		} catch (error) {
-			console.error(
+			logger.error(
 				`Error during cleanup for contract ${this.contractId}:`,
-				error,
+				error
 			);
 		}
 	}
@@ -624,16 +625,16 @@ Command: ${rechargeInfo.instructions}`,
 			// Close Redis connection if it exists
 			if (EizenService.sharedArweaveConfig?.redis) {
 				await EizenService.sharedArweaveConfig.redis.quit();
-				console.log("Redis connection closed");
+				logger.info("Redis connection closed");
 			}
 
 			// Reset shared state
 			EizenService.sharedArweaveConfig = null;
 			EizenService.arweaveInitPromise = null;
 
-			console.log("EizenService global cleanup completed");
+			logger.info("EizenService global cleanup completed");
 		} catch (error) {
-			console.error("Error during global cleanup:", error);
+			logger.error("Error during global cleanup:", error);
 		}
 	}
 
@@ -653,9 +654,9 @@ Command: ${rechargeInfo.instructions}`,
 		await EizenService.getSharedArweaveConfig();
 		const hnswParams = EizenService.getHnswParams();
 
-		console.log("Shared Arweave configuration initialized");
-		console.log(
-			`HNSW Parameters: m=${hnswParams.m}, efConstruction=${hnswParams.efConstruction}, efSearch=${hnswParams.efSearch}`,
+		logger.info("Shared Arweave configuration initialized");
+		logger.info(
+			`HNSW Parameters: m=${hnswParams.m}, efConstruction=${hnswParams.efConstruction}, efSearch=${hnswParams.efSearch}`
 		);
 	}
 }

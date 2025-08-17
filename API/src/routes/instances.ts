@@ -1,8 +1,9 @@
-import { Router, type Request, type Response } from "express";
 import { eq } from "drizzle-orm";
+import { type Request, type Response, Router } from "express";
 import { db } from "../db/db.js";
 import { keysTable } from "../db/schema/keys.js";
 import { auth } from "../middlewares/auth.js";
+import { logger } from "../config/winston.js";
 
 const router = Router();
 
@@ -32,7 +33,7 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
 			data: instances,
 		});
 	} catch (error) {
-		console.error("Error fetching instances:", error);
+		logger.error("Error fetching instances:", error);
 		res.status(500).json({
 			success: false,
 			message: "Internal server error",
@@ -68,7 +69,7 @@ router.post("/create", async (req: Request, res: Response): Promise<void> => {
 			data: newInstance[0],
 		});
 	} catch (error) {
-		console.error("Error creating instance:", error);
+		logger.error("Error creating instance:", error);
 		res.status(500).json({
 			success: false,
 			message: "Internal server error",

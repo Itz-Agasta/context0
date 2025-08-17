@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
+import { logger } from "../config/winston.js";
+
 
 dotenv.config();
 
@@ -110,7 +112,7 @@ export class MailService {
 											hour: "2-digit",
 											minute: "2-digit",
 											timeZoneName: "short",
-										},
+										}
 									)}
                 </p>
               </div>
@@ -154,13 +156,13 @@ export class MailService {
 				html: htmlContent,
 			});
 
-			console.log(
+			logger.info(
 				"Deployment success email sent successfully:",
-				result.messageId,
+				result.messageId
 			);
 			return true;
 		} catch (error) {
-			console.error("Mail service error:", error);
+			logger.error("Mail service error:", error);
 			return false;
 		}
 	}

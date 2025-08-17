@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/db.js";
-import { subscriptionsTable } from "../db/schema/subscriptions.js";
 import { keysTable } from "../db/schema/keys.js";
-
+import { subscriptionsTable } from "../db/schema/subscriptions.js";
+import { logger } from "../config/winston.js";
 export interface QuotaCheckResult {
 	allowed: boolean;
 	currentUsage: number;
@@ -58,7 +58,7 @@ export async function checkQuota(clerkId: string): Promise<QuotaCheckResult> {
 			remaining,
 		};
 	} catch (error) {
-		console.error("Error checking quota:", error);
+		logger.error("Error checking quota:", error);
 		return {
 			allowed: false,
 			currentUsage: 0,
@@ -77,7 +77,7 @@ export async function checkQuota(clerkId: string): Promise<QuotaCheckResult> {
  */
 export async function incrementQuotaUsage(
 	clerkId: string,
-	increment: number = 1,
+	increment = 1
 ): Promise<QuotaUpdateResult> {
 	try {
 		// First, get current subscription
@@ -103,8 +103,8 @@ export async function incrementQuotaUsage(
 			})
 			.where(eq(subscriptionsTable.clerkId, clerkId));
 
-		console.log(
-			`Updated quota for user ${clerkId}: ${subscription.quotaUsed} -> ${newUsage}`,
+		logger.info(
+			`Updated quota for user ${clerkId}: ${subscription.quotaUsed} -> ${newUsage}`
 		);
 
 		return {
@@ -112,7 +112,7 @@ export async function incrementQuotaUsage(
 			newUsage,
 		};
 	} catch (error) {
-		console.error("Error updating quota:", error);
+		logger.error("Error updating quota:", error);
 		return {
 			success: false,
 			newUsage: 0,
@@ -132,7 +132,7 @@ export async function getUserSubscription(clerkId: string) {
 			where: eq(subscriptionsTable.clerkId, clerkId),
 		});
 	} catch (error) {
-		console.error("Error fetching user subscription:", error);
+		logger.error("Error fetching user subscription:", error);
 		return null;
 	}
 }
@@ -146,6 +146,6 @@ export async function updateLastUsedAt(userId: string): Promise<void> {
 			})
 			.where(eq(keysTable.clerkId, userId));
 	} catch (error) {
-		console.error("Error updating lastUsedAt:", error);
+		logger.error("Error updating lastUsedAt:", error);
 	}
 }

@@ -6,6 +6,7 @@ import { RedisCache } from "warp-contracts-redis";
 import { checkWalletBalance, validateWalletAddress } from "../utils/helper.js";
 import { arLocalService } from "./arlocal.js";
 import { initializeRedis } from "./redis.js";
+import { logger } from "./winston.js";
 
 /**
 * Configuration interface for Arweave blockchain connection.
@@ -70,13 +71,13 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 					(contractTxId: string) =>
 						new RedisCache(
 							{ ...defaultCacheOptions, dbLocation: `${contractTxId}` },
-							{ client: redis },
-						),
+							{ client: redis }
+						)
 				)
 			: WarpFactory.forMainnet(undefined, true); // Fallback: mainnet without Redis caching
 
-		console.log(
-			"Configured for Arweave mainnet (production) using https://arweave.net gateway",
+		logger.info(
+			"Configured for Arweave mainnet (production) using https://arweave.net gateway"
 		);
 	} else {
 		// Development: Use ArLocal if already running, otherwise start it
@@ -84,7 +85,7 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 		try {
 			// Check if ArLocal is already running, if not start it
 			if (!arLocalService.isArLocalRunning()) {
-				console.log("ArLocal not running, starting it now...");
+				logger.info("ArLocal not running, starting it now...");
 				await arLocalService.start();
 			}
 			warp = redis
@@ -92,18 +93,18 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 						(contractTxId: string) =>
 							new RedisCache(
 								{ ...defaultCacheOptions, dbLocation: `${contractTxId}` },
-								{ client: redis },
-							),
+								{ client: redis }
+							)
 					)
 				: WarpFactory.forLocal(ARLOCAL_PORT);
 
-			console.log(
-				`Configured for ArLocal development server on PORT:${ARLOCAL_PORT}`,
+			logger.info(
+				`Configured for ArLocal development server on PORT:${ARLOCAL_PORT}`
 			);
 		} catch (error) {
-			console.warn("Failed to start ArLocal:", (error as Error).message);
-			console.warn("Falling back to Warp Testnet...");
-			console.warn("⚠️ Some endpoints may not work as expected in testnet mode");
+			logger.warn("Failed to start ArLocal:", (error as Error).message);
+			logger.warn("Falling back to Warp Testnet...");
+			logger.warn("⚠️ Some endpoints may not work as expected in testnet mode");
 
 			// FALLBACK: Use testnet when ArLocal startup fails
 			warp = redis
@@ -111,9 +112,8 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 						(contractTxId: string) =>
 							new RedisCache(
 								{ ...defaultCacheOptions, dbLocation: `${contractTxId}` },
-
-								{ client: redis },
-							),
+								{ client: redis }
+							)
 					)
 				: WarpFactory.forTestnet(undefined, true);
 		}
@@ -137,23 +137,23 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 					wallet,
 					expectedAddress,
 					walletPath,
-					warp,
+					warp
 				);
 
-				console.log("Production wallet loaded successfully");
-				console.log(`Wallet Source: ${walletPath}`);
-				console.log(`Wallet Address: ${walletAddress}`);
-				console.log("Wallet validation passed.");
+				logger.info("Production wallet loaded successfully");
+				logger.info(`Wallet Source: ${walletPath}`);
+				logger.info(`Wallet Address: ${walletAddress}`);
+				logger.info("Wallet validation passed.");
 			} catch (error) {
-				console.error("❌ Failed to load production wallet:", error);
+				logger.error("❌ Failed to load production wallet:", error);
 
 				throw new Error(
-					"Production wallet is required but could not be loaded. Please check ARWEAVE_WALLET_PATH and ensure the wallet file exists and contains valid JSON.",
+					"Production wallet is required but could not be loaded. Please check ARWEAVE_WALLET_PATH and ensure the wallet file exists and contains valid JSON."
 				);
 			}
 		} else {
 			throw new Error(
-				"Production environment requires both SERVICE_WALLET_ADDRESS and ARWEAVE_WALLET_PATH environment variables to be set.",
+				"Production environment requires both SERVICE_WALLET_ADDRESS and ARWEAVE_WALLET_PATH environment variables to be set."
 			);
 		}
 	} else {
@@ -164,9 +164,9 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 			const { readFile } = await import("node:fs/promises");
 			wallet = JSON.parse(await readFile(devWalletPath, "utf-8"));
 			const walletAddress = await warp.arweave.wallets.jwkToAddress(wallet);
-			console.log("Development wallet loaded from existing file");
-			console.log(`Wallet Source: ${devWalletPath}`);
-			console.log(`Wallet Address: ${walletAddress}`);
+			logger.info("Development wallet loaded from existing file");
+			logger.info(`Wallet Source: ${devWalletPath}`);
+			logger.info(`Wallet Address: ${walletAddress}`);
 
 			// Fund the wallet if using ArLocal
 			if (arLocalService.isArLocalRunning()) {
@@ -174,18 +174,18 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 			}
 		} catch (_error) {
 			// Generate and save new development wallet if file doesn't exist
-			console.log("Development wallet not found, creating new one...");
+			logger.info("Development wallet not found, creating new one...");
 			wallet = await warp.arweave.wallets.generate();
 			const walletAddress = await warp.arweave.wallets.jwkToAddress(wallet);
 
 			// Persist the wallet for future development sessions
 			const { writeFile } = await import("node:fs/promises");
 			await writeFile(devWalletPath, JSON.stringify(wallet, null, 2));
-			console.log("New development wallet created and saved");
-			console.log(`Wallet Source: ${devWalletPath}`);
-			console.log(`Wallet Address: ${walletAddress}`);
-			console.log(
-				"For production deployment, configure SERVICE_WALLET_ADDRESS and ARWEAVE_WALLET_PATH environment variables",
+			logger.info("New development wallet created and saved");
+			logger.info(`Wallet Source: ${devWalletPath}`);
+			logger.info(`Wallet Address: ${walletAddress}`);
+			logger.info(
+				"For production deployment, configure SERVICE_WALLET_ADDRESS and ARWEAVE_WALLET_PATH environment variables"
 			);
 
 			// Fund the newly created wallet if using ArLocal
@@ -195,8 +195,8 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 		}
 	}
 
-	console.log(
-		`Arweave blockchain configured for ${isProduction ? "production" : "development"} environment`,
+	logger.info(
+		`Arweave blockchain configured for ${isProduction ? "production" : "development"} environment`
 	);
 
 	return {
@@ -216,26 +216,26 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 async function fundDevelopmentWallet(
 	warp: Warp,
 	wallet: JWKInterface,
-	address: string,
+	address: string
 ): Promise<void> {
 	try {
 		// Fund the wallet with 10 AR (10000000000000000 winston)
 		const response = await warp.arweave.api.get(
-			`mint/${address}/10000000000000000`,
+			`mint/${address}/10000000000000000`
 		);
 
 		if (response.status === 200) {
 			// Check and log the wallet balance after funding
 			const balanceInfo = await checkWalletBalance(warp, wallet);
-			console.log(`Adding 10000 AR on dev wallet ${address}`);
-			console.log(`Current wallet balance: ${balanceInfo.readableBalance} AR`);
+			logger.info(`Adding 10000 AR on dev wallet ${address}`);
+			logger.info(`Current wallet balance: ${balanceInfo.readableBalance} AR`);
 		} else {
-			console.warn("Failed to fund development wallet:", response.status);
+			logger.warn("Failed to fund development wallet:", response.status);
 		}
 	} catch (error) {
-		console.warn(
+		logger.warn(
 			"Failed to fund development wallet:",
-			(error as Error).message,
+			(error as Error).message
 		);
 	}
 }

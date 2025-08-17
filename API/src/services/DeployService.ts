@@ -7,6 +7,7 @@ import { usersTable } from "../db/schema/users.js";
 import { generateContractHash } from "../utils/contract.js";
 import { EizenService } from "./EizenService.js";
 import { mailService } from "./mailService.js";
+import { logger } from "../config/winston.js";
 
 export interface DeploymentResult {
 	success: boolean;
@@ -59,7 +60,7 @@ export async function validateUserSubscription(userId: string): Promise<{
 
 		return { valid: true, subscription };
 	} catch (error) {
-		console.error("Error validating subscription:", error);
+		logger.error("Error validating subscription:", error);
 		return { valid: false, error: "Failed to validate subscription" };
 	}
 }
@@ -68,7 +69,7 @@ export async function validateUserSubscription(userId: string): Promise<{
  * Validates user key record and ensures no existing contract deployment
  */
 export async function validateUserKey(
-	userId: string,
+	userId: string
 ): Promise<{ valid: boolean; key?: UserKey; error?: string }> {
 	try {
 		// Fetch existing key record for the user
@@ -89,7 +90,7 @@ export async function validateUserKey(
 
 		return { valid: true, key: existingKey };
 	} catch (error) {
-		console.error("Error validating user key:", error);
+		logger.error("Error validating user key:", error);
 		return { valid: false, error: "Failed to validate user key" };
 	}
 }
@@ -116,10 +117,10 @@ export async function deployContract(): Promise<{
 			return { success: false, error: "Failed to deploy contract on Arweave" };
 		}
 
-		console.log(`Contract deployed successfully: ${contractId}`);
+		logger.info(`Contract deployed successfully: ${contractId}`);
 		return { success: true, contractId, walletAddress };
 	} catch (error) {
-		console.error("Error deploying contract:", error);
+		logger.error("Error deploying contract:", error);
 		return { success: false, error: "Contract deployment failed" };
 	}
 }
@@ -143,7 +144,7 @@ export async function deployContract(): Promise<{
 export async function processContractHash(
 	contractTxId: string,
 	userId: string,
-	walletAddress: string,
+	walletAddress: string
 ): Promise<{
 	success: boolean;
 	hashData?: ContractHashData;
@@ -152,7 +153,7 @@ export async function processContractHash(
 }> {
 	try {
 		// Debug: Log the values being processed
-		console.log(`DEBUG - Processing contract hash:
+		logger.debug(`DEBUG - Processing contract hash:
   - contractTxId: ${contractTxId}
   - userId: ${userId}
   - walletAddress: ${walletAddress}`);
@@ -185,8 +186,8 @@ export async function processContractHash(
 			};
 		}
 
-		console.log(
-			`Updated contract hash for user ${userId}, wallet: ${walletAddress}`,
+		logger.info(
+			`Updated contract hash for user ${userId}, wallet: ${walletAddress}`
 		);
 
 		return {
@@ -195,7 +196,7 @@ export async function processContractHash(
 			updatedKey,
 		};
 	} catch (error) {
-		console.error("Error processing contract hash:", error);
+		logger.error("Error processing contract hash:", error);
 		return { success: false, error: "Failed to process contract hash" };
 	}
 }
@@ -259,7 +260,7 @@ export async function deployForUser(userId: string): Promise<DeploymentResult> {
 		const hashProcessing = await processContractHash(
 			deployment.contractId as string,
 			userId,
-			deployment.walletAddress as string,
+			deployment.walletAddress as string
 		);
 		if (!hashProcessing.success) {
 			return { success: false, error: hashProcessing.error };
@@ -284,7 +285,7 @@ export async function deployForUser(userId: string): Promise<DeploymentResult> {
 			data: deploymentData,
 		};
 	} catch (error) {
-		console.error("Deployment service error:", error);
+		logger.error("Deployment service error:", error);
 		return {
 			success: false,
 			error:
@@ -302,7 +303,7 @@ export async function deployForUser(userId: string): Promise<DeploymentResult> {
  */
 async function sendDeploymentNotification(
 	userId: string,
-	deploymentData: DeploymentResult["data"],
+	deploymentData: DeploymentResult["data"]
 ): Promise<void> {
 	try {
 		if (!deploymentData) return;
@@ -320,11 +321,11 @@ async function sendDeploymentNotification(
 				contractId: deploymentData.contractId,
 				deploymentTime: new Date(deploymentData.deployedAt),
 			});
-			console.log(`Deployment notification email sent to ${user.email}`);
+			logger.info(`Deployment notification email sent to ${user.email}`);
 		}
 	} catch (emailError) {
 		// Don't fail the deployment if email sending fails
-		console.error("Failed to send deployment notification email:", emailError);
+		logger.error("Failed to send deployment notification email:", emailError);
 	}
 }
 
@@ -352,7 +353,7 @@ async function sendDeploymentNotification(
  * ```
  */
 export async function getDeploymentStatus(
-	userId: string,
+	userId: string
 ): Promise<{ hasDeployment: boolean; keyData?: UserKey }> {
 	try {
 		// Fetch the user's key record
@@ -363,8 +364,7 @@ export async function getDeploymentStatus(
 		// Check if user has a key record and if it contains deployment data
 		// instanceKeyHash is only populated after successful contract deployment
 		if (
-			!keyData ||
-			!keyData.instanceKeyHash ||
+			!(keyData && keyData.instanceKeyHash) ||
 			keyData.instanceKeyHash === ""
 		) {
 			return { hasDeployment: false };
@@ -372,7 +372,7 @@ export async function getDeploymentStatus(
 
 		return { hasDeployment: true, keyData };
 	} catch (error) {
-		console.error("Error checking deployment status:", error);
+		logger.error("Error checking deployment status:", error);
 		return { hasDeployment: false };
 	}
 }

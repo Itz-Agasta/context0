@@ -13,9 +13,9 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "strictNullChecks": true
   },
   "include": ["src", "types.d.ts"],
   "exclude": ["dist", "node_modules"]
 }
-

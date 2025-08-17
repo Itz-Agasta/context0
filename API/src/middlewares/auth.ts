@@ -12,7 +12,7 @@ const client = jwksClient({
 	rateLimit: true,
 	jwksRequestsPerMinute: 10, // Default is 10, adjust as needed
 	cacheMaxEntries: 5, // Default is 5, adjust as needed
-	cacheMaxAge: 600000, // Default is 10 minutes, adjust as needed
+	cacheMaxAge: 600_000, // Default is 10 minutes, adjust as needed
 });
 
 const getKey: jwt.GetPublicKeyOrSecret = (header, callback) => {

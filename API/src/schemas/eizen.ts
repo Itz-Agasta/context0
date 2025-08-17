@@ -8,7 +8,7 @@ export const vectorEmbeddingSchema = z
 	.min(1)
 	.max(4096) // Support up to 4096 dimensions
 	.describe(
-		"Vector embedding array - matches Eizen insert(point, metadata) 'point' parameter",
+		"Vector embedding array - matches Eizen insert(point, metadata) 'point' parameter"
 	);
 
 /** Vector metadata - optional structured data attached to embeddings */
@@ -16,7 +16,7 @@ export const vectorMetadataSchema = z
 	.record(z.any())
 	.optional()
 	.describe(
-		"Optional metadata object - matches Eizen insert(point, metadata) 'metadata' parameter",
+		"Optional metadata object - matches Eizen insert(point, metadata) 'metadata' parameter"
 	);
 
 /** Insert vector request - combining embeddings with metadata for Eizen storage
@@ -52,11 +52,11 @@ export const adminInsertVectorSchema = z
 			.string()
 			.optional()
 			.describe(
-				"Optional contract ID for admin operations. If not provided, uses EIZEN_CONTRACT_ID from environment",
+				"Optional contract ID for admin operations. If not provided, uses EIZEN_CONTRACT_ID from environment"
 			),
 	})
 	.describe(
-		"Schema for admin Eizen.insert(vector, metadata) method with optional contractId",
+		"Schema for admin Eizen.insert(vector, metadata) method with optional contractId"
 	);
 
 /** Search vector request - semantic search through Eizen vector database
@@ -85,11 +85,11 @@ export const adminSearchVectorSchema = z
 			.string()
 			.optional()
 			.describe(
-				"Optional contract ID for admin operations. If not provided, uses EIZEN_CONTRACT_ID from environment",
+				"Optional contract ID for admin operations. If not provided, uses EIZEN_CONTRACT_ID from environment"
 			),
 	})
 	.describe(
-		"Schema for admin Eizen.knn_search(query, k) method with optional contractId",
+		"Schema for admin Eizen.knn_search(query, k) method with optional contractId"
 	);
 
 export type VectorEmbedding = z.infer<typeof vectorEmbeddingSchema>;

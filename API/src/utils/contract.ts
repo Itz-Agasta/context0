@@ -35,7 +35,7 @@ export interface ContractHashResult {
  */
 export const generateContractHash = (
 	contractId: string,
-	userId: string,
+	userId: string
 ): ContractHashResult => {
 	const payload: ContractHashPayload = {
 		contractId,
@@ -70,7 +70,7 @@ export const generateContractHash = (
  * @returns The decoded ContractHashPayload if valid, or null otherwise.
  */
 export const verifyContractHash = (
-	token: string,
+	token: string
 ): ContractHashPayload | null => {
 	try {
 		const decoded = jwt.verify(token, JWT_SECRET, {

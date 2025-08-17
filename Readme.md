@@ -1,6 +1,11 @@
-<h1 align="center">Context0</h1>
+<h1 align="center">
+  Context0 <br/>
+  <span style="font-size: 20px; font-weight: normal;">
+    The Future of AI Memory is Decentralized
+  </span>
+</h1>
 
-<p align="center"><i>The Future of AI Memory is Decentralized</i></p>
+
 
 <p align="center">
   <img src="docs/imgs/Context0_thumbnail.png" alt="Context0 Thumbnail"/>
@@ -18,6 +23,7 @@
   <a href="https://github.com/Itz-Agasta/context0/stargazers"><img src="https://img.shields.io/github/stars/Itz-Agasta/context0" alt="GitHub Stars"></a>
   <a href="https://github.com/Itz-Agasta/context0/commits/main"><img src="https://img.shields.io/github/last-commit/Itz-Agasta/context0" alt="Last Commit"></a>
 </p>
+
 
 > **"What if AI agents could remember everything, forever, without anyone controlling their memories?"**
 

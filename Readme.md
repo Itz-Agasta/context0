@@ -33,11 +33,11 @@
 
 Imagine a world where:
 
-- 🧠 **AI agents have perfect, permanent memory** that survives system crashes, company shutdowns, or censorship
-- 🌐 **Memories are owned by users**, not corporations - stored on immutable blockchain infrastructure
-- 🔍 **Knowledge compounds globally** - AI agents can build upon each other's learnings across time and space
-- ⚡ **Search is lightning-fast** - finding relevant memories from millions of conversations in milliseconds
-- 🔒 **Privacy is built-in** - your memories are yours, encrypted and accessible only by you
+- **AI agents have perfect, permanent memory** that survives system crashes, company shutdowns, or censorship
+- **Memories are owned by users**, not corporations - stored on immutable blockchain infrastructure
+- **Knowledge compounds globally** - AI agents can build upon each other's learnings across time and space
+- **Search is lightning-fast** - finding relevant memories from millions of conversations in milliseconds
+- **Privacy is built-in** - your memories are yours, encrypted and accessible only by you
 
 **This is Context0** - the memory layer for the decentralized AI future.
 
@@ -47,11 +47,11 @@ Imagine a world where:
 
 Current AI systems have a **fundamental flaw**:
 
-- 💸 **Expensive & Centralized**: Companies charge you monthly to store YOUR conversations
-- 🔒 **Vendor Lock-in**: Your memories are trapped in proprietary systems
-- 💀 **Memory Loss**: When services shut down or reset, years of AI interactions disappear
-- 🎭 **No Privacy**: Your conversations are stored on corporate servers, subject to surveillance
-- 🚫 **Censorship Risk**: Memories can be deleted, modified, or restricted by platform owners
+- **Expensive & Centralized**: Companies charge you monthly to store YOUR conversations
+- **Vendor Lock-in**: Your memories are trapped in proprietary systems
+- **Memory Loss**: When services shut down or reset, years of AI interactions disappear
+- **No Privacy**: Your conversations are stored on corporate servers, subject to surveillance
+- **Censorship Risk**: Memories can be deleted, modified, or restricted by platform owners
 
 ---
 
@@ -92,9 +92,9 @@ _[Suggested image: Architecture diagram showing AI agents connecting to MCP serv
 
 ### Simple as 1-2-3
 
-1. **🔗 Connect Your AI**: Add Context0 to Claude, ChatGPT, or any AI tool (one-time setup)
-2. **💬 Chat Normally**: Your AI automatically remembers important parts of conversations
-3. **🧠 Perfect Memory**: Ask about anything from months ago - your AI will remember perfectly
+1. **Connect Your AI**: Add Context0 to Claude, ChatGPT, or any AI tool (one-time setup)
+2. **Chat Normally**: Your AI automatically remembers important parts of conversations
+3. **Perfect Memory**: Ask about anything from months ago - your AI will remember perfectly
 
 Context0 operates as a **4-layer protocol stack**:
 
@@ -142,24 +142,24 @@ Context0 operates as a **4-layer protocol stack**:
 
 **For AI Users:**
 
-- 💰 **Save Money**: No more monthly fees for AI memory storage
-- 🔒 **Own Your Data**: Your conversations belong to you, not corporations
-- 🚀 **Better AI**: AI agents with perfect memory give better responses
-- 🌐 **Future-Proof**: Works with any AI platform, never get locked in
+- **Save Money**: No more monthly fees for AI memory storage
+- **Own Your Data**: Your conversations belong to you, not corporations
+- **Better AI**: AI agents with perfect memory give better responses
+- **Future-Proof**: Works with any AI platform, never get locked in
 
 **For Developers:**
 
-- ⚡ **Easy Integration**: Add persistent memory to any AI app in minutes
-- 🏗️ **Built to Scale**: Handles millions of vectors with sub-second search
-- 🔧 **Open Source**: Build on our protocol, customize to your needs
-- 🌊 **Blockchain Native**: Leverage the permanence and decentralization of Web3
+- **Easy Integration**: Add persistent memory to any AI app in minutes
+- **Built to Scale**: Handles millions of vectors with sub-second search
+- **Open Source**: Build on our protocol, customize to your needs
+- **Blockchain Native**: Leverage the permanence and decentralization of Web3
 
 **For the AI Ecosystem:**
 
-- 🧠 **Collective Intelligence**: Enable AI agents to build on each other's knowledge
-- 🌍 **Global Memory Layer**: Create a shared, permanent knowledge base for AI
-- 📈 **Innovation Acceleration**: Focus on AI capabilities, not infrastructure
-- 🔓 **Democratic AI**: Reduce dependence on big tech memory silos
+- **Collective Intelligence**: Enable AI agents to build on each other's knowledge
+- **Global Memory Layer**: Create a shared, permanent knowledge base for AI
+- **Innovation Acceleration**: Focus on AI capabilities, not infrastructure
+- **Democratic AI**: Reduce dependence on big tech memory silos
 
 ## 🚀 Try Context0 Today
 
@@ -231,7 +231,7 @@ cd context0
 └── docs/      # Technical documentation
 ```
 
-**🔧 Technical Resources:**
+**Technical Resources:**
 
 - [Complete API Documentation](docs/api/routes.md)
 - [Developer Guide](docs/context0.md)
@@ -240,14 +240,14 @@ cd context0
 
 ---
 
-### 🚀 What's Next?
+### What's Next?
 
 We're building toward a future where:
 
-- **🌐 Global Memory Network**: AI agents share knowledge across platforms
-- **🔒 Privacy-First AI**: Users control their data completely
-- **⚡ Instant AI Context**: Any AI instantly understands your full history
-- **🏛️ Democratic AI**: No single company controls AI memory infrastructure
+- **Global Memory Network**: AI agents share knowledge across platforms
+- **Privacy-First AI**: Users control their data completely
+- **Instant AI Context**: Any AI instantly understands your full history
+- **Democratic AI**: No single company controls AI memory infrastructure
 
 ## 📊 Project Stats & Community
 
@@ -256,7 +256,7 @@ We're building toward a future where:
 [![Discord](https://img.shields.io/badge/Discord-Join%20Community-7289da?style=flat-square&logo=discord)](https://discord.gg/EmmFRZXMSK)
 [![Twitter](https://img.shields.io/badge/Twitter-Follow%20Updates-1da1f2?style=flat-square&logo=twitter)](https://twitter.com/context0_tech) _(coming soon)_
 
-**🏆 Recognition:**
+**Recognition:**
 
 - Winner of [Innofusion2.0 Hackathon 2025](https://www.linkedin.com/posts/innofusionindia_innofusionhackathon-blockchainbosses-teamvyse-activity-7357410480891613184-OOBW/)
 - Featured Project at [Hack4Bengal 4.0](https://devfolio.co/projects/archivenet-f039)
@@ -266,19 +266,19 @@ We're building toward a future where:
 
 ### Ways to Contribute
 
-- **🐛 Report Bugs**: Help us improve by reporting issues
-- **✨ Feature Ideas**: Suggest new capabilities for the protocol
-- **📝 Documentation**: Help others understand and use Context0
-- **🔧 Code**: Contribute to any of our four repositories
-- **🌟 Spread the Word**: Share Context0 with other AI enthusiasts
+- **Report Bugs**: Help us improve by reporting issues
+- **Feature Ideas**: Suggest new capabilities for the protocol
+- **Documentation**: Help others understand and use Context0
+- **Code**: Contribute to any of our four repositories
+- **Spread the Word**: Share Context0 with other AI enthusiasts
 
 ### Get Help
 
-- 📖 **Documentation**: [docs/](docs/)
-- 🐛 **Issues**: [GitHub Issues](https://github.com/Itz-Agasta/context0/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/Itz-Agasta/context0/discussions)
-- 📧 **Email**: admin@context0.tech
-- 🔒 **Security**: security@context0.tech
+- **Documentation**: [docs/](docs/)
+- **Issues**: [GitHub Issues](https://github.com/Itz-Agasta/context0/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Itz-Agasta/context0/discussions)
+- **Email**: admin@context0.tech
+- **Security**: security@context0.tech
 
 ## 📜 License & Legal
 

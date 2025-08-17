@@ -56,6 +56,7 @@ Current AI systems have a **fundamental flaw**:
 ---
 
 ### The Context0 Solution
+<img width="1333" height="805" alt="hero_context03" src="https://github.com/user-attachments/assets/fb96f63f-7977-44c4-b923-efa9b6e4ea01" />
 
 We solve this with **three revolutionary innovations**:
 
@@ -86,9 +87,10 @@ Your memories belong to **YOU**, not us.
 - **Portable by design** - take your memories to any compatible AI system
 - **Pay once, own forever** - no monthly fees for storage
 
-## 🏗️ How It Works: The Context0 Protocol
 
-_[Suggested image: Architecture diagram showing AI agents connecting to MCP server, which connects to API, which stores vectors on Arweave blockchain]_
+## 🏗️ How It Works: The Context0 Protocol
+<img width="1556" height="1598" alt="context0arc_final" src="https://github.com/user-attachments/assets/d420f8f0-03b9-4f6f-909b-27570cebf773" />
+
 
 ### Simple as 1-2-3
 
@@ -165,7 +167,7 @@ Context0 operates as a **4-layer protocol stack**:
 
 ### Option 1: Quick Demo (5 minutes)
 
-_[Suggested image: Screenshot of Claude Desktop with Context0 integration working]_
+_[image: Screenshot of Claude Desktop with Context0 integration working]_
 
 ```bash
 # Clone and run locally
@@ -178,7 +180,7 @@ Visit `http://localhost:3000` to see the dashboard and get your API key.
 
 ### Option 2: Use with Claude Desktop (Most Popular)
 
-_[Suggested image: Step-by-step visual guide showing Claude Desktop configuration]_
+_[image: Step-by-step visual guide showing Claude Desktop configuration]_
 
 1. **Get API Key**: Sign up at our dashboard
 2. **Configure Claude**: Add Context0 to your MCP settings

@@ -18,7 +18,7 @@ const router = Router();
 // TODO: Replace this with actual user lookup from SQL database
 // This will be implemented when payment gateway integration is added
 async function getUserMemoryService(
-	req: Request,
+	req: Request
 ): Promise<MemoryService | undefined> {
 	// TODO: Extract API key from request headers
 	// const apiKey = req.headers['x-api-key'] as string;
@@ -69,7 +69,7 @@ router.post(
 				res
 					.status(401)
 					.json(
-						errorResponse("Authentication failed", "Unable to identify user"),
+						errorResponse("Authentication failed", "Unable to identify user")
 					);
 				return;
 			}
@@ -81,9 +81,8 @@ router.post(
 					.json(
 						errorResponse(
 							"Quota exceeded",
-							quotaCheck.error ||
-								"You have reached your memory insertion limit",
-						),
+							quotaCheck.error || "You have reached your memory insertion limit"
+						)
 					);
 				return;
 			}
@@ -95,8 +94,8 @@ router.post(
 					.json(
 						errorResponse(
 							"Memory service not available",
-							"Unable to initialize memory service",
-						),
+							"Unable to initialize memory service"
+						)
 					);
 				return;
 			}
@@ -110,7 +109,7 @@ router.post(
 			if (!quotaUpdate.success) {
 				console.error(
 					"Failed to update quota after memory creation:",
-					quotaUpdate.error,
+					quotaUpdate.error
 				);
 				// Note: We don't fail the request since the memory was created successfully
 				// but we log the error for monitoring
@@ -126,11 +125,11 @@ router.post(
 				.json(
 					errorResponse(
 						"Failed to create memory",
-						error instanceof Error ? error.message : "Unknown error",
-					),
+						error instanceof Error ? error.message : "Unknown error"
+					)
 				);
 		}
-	},
+	}
 );
 
 /**
@@ -156,8 +155,8 @@ router.get(
 					.json(
 						errorResponse(
 							"Invalid query parameter",
-							"Query parameter is required and must be a string",
-						),
+							"Query parameter is required and must be a string"
+						)
 					);
 				return;
 			}
@@ -179,15 +178,15 @@ router.get(
 					.json(
 						errorResponse(
 							"Memory service not available",
-							"Unable to initialize memory service",
-						),
+							"Unable to initialize memory service"
+						)
 					);
 				return;
 			}
 			const results = await memoryService.searchMemories(validatedRequest);
 
 			res.json(
-				successResponse(results, `Found ${results.length} relevant memories`),
+				successResponse(results, `Found ${results.length} relevant memories`)
 			);
 		} catch (error) {
 			console.error("Memory search error:", error);
@@ -198,8 +197,8 @@ router.get(
 					.json(
 						errorResponse(
 							"Invalid filters parameter",
-							"Filters must be valid JSON",
-						),
+							"Filters must be valid JSON"
+						)
 					);
 				return;
 			}
@@ -209,11 +208,11 @@ router.get(
 				.json(
 					errorResponse(
 						"Failed to search memories",
-						error instanceof Error ? error.message : "Unknown error",
-					),
+						error instanceof Error ? error.message : "Unknown error"
+					)
 				);
 		}
-	},
+	}
 );
 
 /**
@@ -244,15 +243,15 @@ router.post(
 					.json(
 						errorResponse(
 							"Memory service not available",
-							"Unable to initialize memory service",
-						),
+							"Unable to initialize memory service"
+						)
 					);
 				return;
 			}
 			const results = await memoryService.searchMemories(req.body);
 
 			res.json(
-				successResponse(results, `Found ${results.length} relevant memories`),
+				successResponse(results, `Found ${results.length} relevant memories`)
 			);
 		} catch (error) {
 			console.error("Memory search error:", error);
@@ -261,11 +260,11 @@ router.post(
 				.json(
 					errorResponse(
 						"Failed to search memories",
-						error instanceof Error ? error.message : "Unknown error",
-					),
+						error instanceof Error ? error.message : "Unknown error"
+					)
 				);
 		}
-	},
+	}
 );
 
 /**
@@ -284,8 +283,8 @@ router.get(
 					.json(
 						errorResponse(
 							"Memory service not available",
-							"Unable to initialize memory service",
-						),
+							"Unable to initialize memory service"
+						)
 					);
 				return;
 			}
@@ -295,7 +294,7 @@ router.get(
 				res
 					.status(400)
 					.json(
-						errorResponse("Invalid memory ID", "Memory ID must be a number"),
+						errorResponse("Invalid memory ID", "Memory ID must be a number")
 					);
 				return;
 			}
@@ -307,8 +306,8 @@ router.get(
 					.json(
 						errorResponse(
 							"Memory not found",
-							`No memory found with ID: ${memoryId}`,
-						),
+							`No memory found with ID: ${memoryId}`
+						)
 					);
 				return;
 			}
@@ -319,8 +318,8 @@ router.get(
 					.json(
 						errorResponse(
 							"Memory not found",
-							`No memory found with ID: ${memoryId}`,
-						),
+							`No memory found with ID: ${memoryId}`
+						)
 					);
 				return;
 			}
@@ -333,11 +332,11 @@ router.get(
 				.json(
 					errorResponse(
 						"Failed to retrieve memory",
-						error instanceof Error ? error.message : "Unknown error",
-					),
+						error instanceof Error ? error.message : "Unknown error"
+					)
 				);
 		}
-	},
+	}
 );
 
 /**
@@ -353,8 +352,8 @@ router.get("/", verifyContractHashMiddleware, async (req, res) => {
 				.json(
 					errorResponse(
 						"Memory service not available",
-						"Unable to initialize memory service",
-					),
+						"Unable to initialize memory service"
+					)
 				);
 			return;
 		}
@@ -368,8 +367,8 @@ router.get("/", verifyContractHashMiddleware, async (req, res) => {
 			.json(
 				errorResponse(
 					"Failed to get memory statistics",
-					error instanceof Error ? error.message : "Unknown error",
-				),
+					error instanceof Error ? error.message : "Unknown error"
+				)
 			);
 	}
 });

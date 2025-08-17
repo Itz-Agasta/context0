@@ -33,7 +33,7 @@ export const keysTable = pgTable(
 		clerkIdIdx: index("keys_clerk_idx").on(table.clerkId),
 		activeKeysIdx: index("keys_active_idx").on(table.isActive),
 		instanceKeyHashIdx: index("keys_hash_idx").on(table.instanceKeyHash),
-	}),
+	})
 );
 
 // Keys ---> Users Relationship (many-to-one)

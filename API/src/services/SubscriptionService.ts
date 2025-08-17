@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/db.js";
-import { subscriptionsTable } from "../db/schema/subscriptions.js";
 import { keysTable } from "../db/schema/keys.js";
+import { subscriptionsTable } from "../db/schema/subscriptions.js";
 
 export interface QuotaCheckResult {
 	allowed: boolean;
@@ -77,7 +77,7 @@ export async function checkQuota(clerkId: string): Promise<QuotaCheckResult> {
  */
 export async function incrementQuotaUsage(
 	clerkId: string,
-	increment: number = 1,
+	increment = 1
 ): Promise<QuotaUpdateResult> {
 	try {
 		// First, get current subscription
@@ -104,7 +104,7 @@ export async function incrementQuotaUsage(
 			.where(eq(subscriptionsTable.clerkId, clerkId));
 
 		console.log(
-			`Updated quota for user ${clerkId}: ${subscription.quotaUsed} -> ${newUsage}`,
+			`Updated quota for user ${clerkId}: ${subscription.quotaUsed} -> ${newUsage}`
 		);
 
 		return {

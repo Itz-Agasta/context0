@@ -41,9 +41,9 @@ export const subscriptionsTable = pgTable(
 	(table) => ({
 		clerkIdIdx: index("subscription_clerk_id_idx").on(table.clerkId),
 		activeSubscriptionsIdx: index("active_subscriptions_idx").on(
-			table.isActive,
+			table.isActive
 		),
-	}),
+	})
 );
 
 // Subscription ---> User Relationship (Many-to-One)
@@ -54,7 +54,7 @@ export const userSubscriptionRelations = relations(
 			fields: [subscriptionsTable.clerkId],
 			references: [usersTable.clerkId],
 		}),
-	}),
+	})
 );
 
 // User ---> Subscription Relationship (One-to-One)

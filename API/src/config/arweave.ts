@@ -70,13 +70,13 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 					(contractTxId: string) =>
 						new RedisCache(
 							{ ...defaultCacheOptions, dbLocation: `${contractTxId}` },
-							{ client: redis },
-						),
+							{ client: redis }
+						)
 				)
 			: WarpFactory.forMainnet(undefined, true); // Fallback: mainnet without Redis caching
 
 		console.log(
-			"Configured for Arweave mainnet (production) using https://arweave.net gateway",
+			"Configured for Arweave mainnet (production) using https://arweave.net gateway"
 		);
 	} else {
 		// Development: Use ArLocal if already running, otherwise start it
@@ -92,13 +92,13 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 						(contractTxId: string) =>
 							new RedisCache(
 								{ ...defaultCacheOptions, dbLocation: `${contractTxId}` },
-								{ client: redis },
-							),
+								{ client: redis }
+							)
 					)
 				: WarpFactory.forLocal(ARLOCAL_PORT);
 
 			console.log(
-				`Configured for ArLocal development server on PORT:${ARLOCAL_PORT}`,
+				`Configured for ArLocal development server on PORT:${ARLOCAL_PORT}`
 			);
 		} catch (error) {
 			console.warn("Failed to start ArLocal:", (error as Error).message);
@@ -112,8 +112,8 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 							new RedisCache(
 								{ ...defaultCacheOptions, dbLocation: `${contractTxId}` },
 
-								{ client: redis },
-							),
+								{ client: redis }
+							)
 					)
 				: WarpFactory.forTestnet(undefined, true);
 		}
@@ -137,7 +137,7 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 					wallet,
 					expectedAddress,
 					walletPath,
-					warp,
+					warp
 				);
 
 				console.log("Production wallet loaded successfully");
@@ -148,12 +148,12 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 				console.error("❌ Failed to load production wallet:", error);
 
 				throw new Error(
-					"Production wallet is required but could not be loaded. Please check ARWEAVE_WALLET_PATH and ensure the wallet file exists and contains valid JSON.",
+					"Production wallet is required but could not be loaded. Please check ARWEAVE_WALLET_PATH and ensure the wallet file exists and contains valid JSON."
 				);
 			}
 		} else {
 			throw new Error(
-				"Production environment requires both SERVICE_WALLET_ADDRESS and ARWEAVE_WALLET_PATH environment variables to be set.",
+				"Production environment requires both SERVICE_WALLET_ADDRESS and ARWEAVE_WALLET_PATH environment variables to be set."
 			);
 		}
 	} else {
@@ -185,7 +185,7 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 			console.log(`Wallet Source: ${devWalletPath}`);
 			console.log(`Wallet Address: ${walletAddress}`);
 			console.log(
-				"For production deployment, configure SERVICE_WALLET_ADDRESS and ARWEAVE_WALLET_PATH environment variables",
+				"For production deployment, configure SERVICE_WALLET_ADDRESS and ARWEAVE_WALLET_PATH environment variables"
 			);
 
 			// Fund the newly created wallet if using ArLocal
@@ -196,7 +196,7 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 	}
 
 	console.log(
-		`Arweave blockchain configured for ${isProduction ? "production" : "development"} environment`,
+		`Arweave blockchain configured for ${isProduction ? "production" : "development"} environment`
 	);
 
 	return {
@@ -216,12 +216,12 @@ export async function initializeArweave(): Promise<ArweaveConfig> {
 async function fundDevelopmentWallet(
 	warp: Warp,
 	wallet: JWKInterface,
-	address: string,
+	address: string
 ): Promise<void> {
 	try {
 		// Fund the wallet with 10 AR (10000000000000000 winston)
 		const response = await warp.arweave.api.get(
-			`mint/${address}/10000000000000000`,
+			`mint/${address}/10000000000000000`
 		);
 
 		if (response.status === 200) {
@@ -235,7 +235,7 @@ async function fundDevelopmentWallet(
 	} catch (error) {
 		console.warn(
 			"Failed to fund development wallet:",
-			(error as Error).message,
+			(error as Error).message
 		);
 	}
 }

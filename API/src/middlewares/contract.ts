@@ -16,11 +16,11 @@ interface ContractRequest extends Request {
 export const verifyContractHashMiddleware = async (
 	req: ContractRequest,
 	res: Response,
-	next: NextFunction,
+	next: NextFunction
 ) => {
 	const authHeader = req.headers.authorization;
 
-	if (!authHeader || !authHeader.startsWith("Bearer ")) {
+	if (!(authHeader && authHeader.startsWith("Bearer "))) {
 		res.status(401).json({ error: "Missing or invalid Authorization header" });
 		return;
 	}
@@ -40,7 +40,7 @@ export const verifyContractHashMiddleware = async (
 		where: eq(keysTable.instanceKeyHash, hash),
 	});
 
-	if (!keyRecord || !keyRecord.isActive) {
+	if (!(keyRecord && keyRecord.isActive)) {
 		res.status(403).json({ error: "Unknown or expired contract token" });
 		return;
 	}

@@ -18,16 +18,14 @@ export class ArLocalService {
 			// Verify it's actually accessible
 			const accessible = await this.isArLocalAccessible();
 
-			if (!accessible) {
-				console.log(
-					"ArLocal appears to be running but not accessible, restarting...",
-				);
-
-				await this.stop();
-				// Continue with start process below
-			} else {
+			if (accessible) {
 				return;
 			}
+			console.log(
+				"ArLocal appears to be running but not accessible, restarting..."
+			);
+
+			await this.stop();
 		}
 
 		try {
@@ -60,7 +58,7 @@ export class ArLocalService {
 	}
 
 	async stop(): Promise<void> {
-		if (!this.isRunning || !this.arLocal) {
+		if (!(this.isRunning && this.arLocal)) {
 			console.log("ArLocal is not running");
 			return;
 		}

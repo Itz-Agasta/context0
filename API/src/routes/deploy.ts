@@ -65,8 +65,8 @@ router.post("/", async (req: Request, res: Response) => {
 			.json(
 				successResponse(
 					deploymentResult.data,
-					"Eizen contract deployed successfully",
-				),
+					"Eizen contract deployed successfully"
+				)
 			);
 	} catch (error) {
 		console.error("Contract deployment error:", error);
@@ -75,8 +75,8 @@ router.post("/", async (req: Request, res: Response) => {
 			.json(
 				errorResponse(
 					"Failed to deploy contract",
-					error instanceof Error ? error.message : "Unknown error",
-				),
+					error instanceof Error ? error.message : "Unknown error"
+				)
 			);
 	}
 });
@@ -140,8 +140,8 @@ router.get("/status", auth, async (req: Request, res: Response) => {
 						lastUsedAt: status.keyData.lastUsedAt,
 						isActive: status.keyData.isActive,
 					},
-					"Deployment status retrieved",
-				),
+					"Deployment status retrieved"
+				)
 			);
 		} else {
 			// User has no deployment
@@ -157,8 +157,8 @@ router.get("/status", auth, async (req: Request, res: Response) => {
 			.json(
 				errorResponse(
 					"Failed to check deployment status",
-					error instanceof Error ? error.message : "Unknown error",
-				),
+					error instanceof Error ? error.message : "Unknown error"
+				)
 			);
 	}
 });

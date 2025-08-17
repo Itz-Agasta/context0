@@ -110,7 +110,7 @@ export class MailService {
 											hour: "2-digit",
 											minute: "2-digit",
 											timeZoneName: "short",
-										},
+										}
 									)}
                 </p>
               </div>
@@ -156,7 +156,7 @@ export class MailService {
 
 			console.log(
 				"Deployment success email sent successfully:",
-				result.messageId,
+				result.messageId
 			);
 			return true;
 		} catch (error) {

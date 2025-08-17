@@ -96,7 +96,7 @@ export class MemoryService {
 	async createMemory(data: CreateMemory): Promise<CreateMemoryResult> {
 		try {
 			console.log(
-				`Creating memory from ${data.content.length} characters of content`,
+				`Creating memory from ${data.content.length} characters of content`
 			);
 
 			// Step 1: Convert human-readable text into numerical vectors
@@ -126,7 +126,7 @@ export class MemoryService {
 		} catch (error) {
 			console.error("Failed to create memory:", error);
 			throw new Error(
-				`Failed to create memory: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to create memory: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}
@@ -200,7 +200,7 @@ export class MemoryService {
 		} catch (error) {
 			console.error("Failed to search memories:", error);
 			throw new Error(
-				`Failed to search memories: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to search memories: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}
@@ -244,7 +244,7 @@ export class MemoryService {
 		} catch (error) {
 			console.error(`Failed to retrieve memory ${memoryId}:`, error);
 			throw new Error(
-				`Failed to retrieve memory: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to retrieve memory: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}
@@ -316,7 +316,7 @@ export class MemoryService {
 		} catch (error) {
 			console.error("Failed to generate embeddings:", error);
 			throw new Error(
-				`Failed to generate embeddings: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to generate embeddings: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}
@@ -337,7 +337,7 @@ export class MemoryService {
 	 */
 	private applyFilters(
 		memories: MemoryResult[],
-		filters?: SearchFilters,
+		filters?: SearchFilters
 	): MemoryResult[] {
 		// If no filters provided, return all results unchanged
 		if (!filters) {
@@ -352,7 +352,7 @@ export class MemoryService {
 			if (filters.tags && Array.isArray(filters.tags)) {
 				const memoryTags = (memory.metadata.tags as string[]) || [];
 				const hasRequiredTags = filters.tags.some((tag: string) =>
-					memoryTags.includes(tag),
+					memoryTags.includes(tag)
 				);
 				if (!hasRequiredTags) return false;
 			}

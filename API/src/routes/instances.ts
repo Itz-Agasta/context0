@@ -1,5 +1,5 @@
-import { Router, type Request, type Response } from "express";
 import { eq } from "drizzle-orm";
+import { type Request, type Response, Router } from "express";
 import { db } from "../db/db.js";
 import { keysTable } from "../db/schema/keys.js";
 import { auth } from "../middlewares/auth.js";

@@ -55,7 +55,7 @@ export async function validateWalletAddress(
 		arweave: {
 			wallets: { jwkToAddress: (wallet: JWKInterface) => Promise<string> };
 		};
-	},
+	}
 ): Promise<string> {
 	const walletAddress = await warp.arweave.wallets.jwkToAddress(wallet);
 
@@ -65,7 +65,7 @@ export async function validateWalletAddress(
 		console.error(`Loaded:   ${walletAddress}`);
 		console.error(`Source:   ${walletSource}`);
 		throw new Error(
-			`Wallet address mismatch. Expected '${expectedAddress}' but loaded wallet has address '${walletAddress}'. Please verify the wallet file and expected address are correct.`,
+			`Wallet address mismatch. Expected '${expectedAddress}' but loaded wallet has address '${walletAddress}'. Please verify the wallet file and expected address are correct.`
 		);
 	}
 
@@ -109,7 +109,7 @@ export async function checkRedisConnectivity(): Promise<{
 	details?: string;
 }> {
 	// Return cached result if less than 30 seconds old
-	if (healthCheckCache && Date.now() - healthCheckCache.timestamp < 30000) {
+	if (healthCheckCache && Date.now() - healthCheckCache.timestamp < 30_000) {
 		return healthCheckCache.result;
 	}
 
@@ -117,7 +117,7 @@ export async function checkRedisConnectivity(): Promise<{
 	const redisPort = process.env.REDIS_PORT;
 	const redisPassword = process.env.REDIS_AUTH_KEY;
 
-	if (!redisHost || !redisPort) {
+	if (!(redisHost && redisPort)) {
 		const result = {
 			configured: false,
 			connected: false,
@@ -133,7 +133,7 @@ export async function checkRedisConnectivity(): Promise<{
 	// Create a temporary Redis connection just for testing
 	const testRedis = new Redis({
 		host: redisHost,
-		port: parseInt(redisPort, 10),
+		port: Number.parseInt(redisPort, 10),
 		password: redisPassword,
 		connectTimeout: 2000,
 		commandTimeout: 2000,
@@ -152,7 +152,7 @@ export async function checkRedisConnectivity(): Promise<{
 		await Promise.race([
 			testRedis.ping(),
 			new Promise((_, reject) =>
-				setTimeout(() => reject(new Error("Connection timeout")), 2000),
+				setTimeout(() => reject(new Error("Connection timeout")), 2000)
 			),
 		]);
 
@@ -196,7 +196,7 @@ export async function checkRedisConnectivity(): Promise<{
 export async function checkWalletBalance(
 	warp: Warp,
 	wallet: JWKInterface,
-	requiredBalance = "100000000000", // 0.1 AR in Winston
+	requiredBalance = "100000000000" // 0.1 AR in Winston
 ): Promise<{
 	hasBalance: boolean;
 	currentBalance: string;
@@ -207,7 +207,7 @@ export async function checkWalletBalance(
 		const walletAddress = await warp.arweave.wallets.jwkToAddress(wallet);
 		const balance = await warp.arweave.wallets.getBalance(walletAddress); // Convert Winston to AR for display (1 AR = 1,000,000,000,000 Winston)
 		const readableBalance = (
-			Number.parseInt(balance, 10) / 1000000000000
+			Number.parseInt(balance, 10) / 1_000_000_000_000
 		).toFixed(6);
 
 		return {
@@ -239,17 +239,17 @@ export async function checkWalletBalance(
 export async function logWalletBalanceAfterOperation(
 	warp: Warp,
 	wallet: JWKInterface,
-	operationType: string,
+	operationType: string
 ): Promise<void> {
 	try {
 		const balanceInfo = await checkWalletBalance(warp, wallet);
 		console.log(
-			`Wallet balance after ${operationType}: ${balanceInfo.readableBalance} AR (${balanceInfo.walletAddress})`,
+			`Wallet balance after ${operationType}: ${balanceInfo.readableBalance} AR (${balanceInfo.walletAddress})`
 		);
 	} catch (balanceError) {
 		console.warn(
 			`Could not check wallet balance after ${operationType}:`,
-			balanceError,
+			balanceError
 		);
 	}
 }

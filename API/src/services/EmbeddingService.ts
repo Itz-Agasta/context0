@@ -3,7 +3,7 @@ import type { VectorEmbedding } from "../schemas/eizen.js";
 
 type EmbeddingPipeline = (
 	texts: string[],
-	options?: { pooling?: string; normalize?: boolean },
+	options?: { pooling?: string; normalize?: boolean }
 ) => Promise<{
 	data: Float32Array | number[];
 	dims: number[];
@@ -58,7 +58,7 @@ export class EmbeddingService {
 
 			this.extractor = (await pipeline(
 				"feature-extraction",
-				this.modelName,
+				this.modelName
 			)) as EmbeddingPipeline; // This may take time on first run as it downloads model files
 
 			this.isInitialized = true;
@@ -134,7 +134,7 @@ export class EmbeddingService {
 
 		try {
 			console.log(
-				`Converting text to embeddings: "${text.substring(0, 50)}..."`,
+				`Converting text to embeddings: "${text.substring(0, 50)}..."`
 			);
 
 			// The pipeline returns a Float32Array (or number[]) and dims describing its shape.
@@ -157,7 +157,7 @@ export class EmbeddingService {
 		} catch (error) {
 			console.error("Failed to generate embeddings:", error);
 			throw new Error(
-				`Failed to generate embeddings: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to generate embeddings: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}
@@ -204,7 +204,7 @@ export class EmbeddingService {
 			// Validate that embeddingDim is valid
 			if (embeddingDim <= 0) {
 				throw new Error(
-					`Invalid embedding dimension: ${embeddingDim}. Response dims: [${response.dims.join(", ")}]`,
+					`Invalid embedding dimension: ${embeddingDim}. Response dims: [${response.dims.join(", ")}]`
 				);
 			}
 
@@ -212,7 +212,7 @@ export class EmbeddingService {
 			const batchDim = response.dims[0] ?? 0;
 			if (batchDim !== texts.length) {
 				throw new Error(
-					`Batch dimension mismatch: expected ${texts.length} texts but got batch size ${batchDim}. Response dims: [${response.dims.join(", ")}]`,
+					`Batch dimension mismatch: expected ${texts.length} texts but got batch size ${batchDim}. Response dims: [${response.dims.join(", ")}]`
 				);
 			}
 
@@ -223,7 +223,7 @@ export class EmbeddingService {
 				// 1D case: single embedding flattened
 				if (texts.length !== 1) {
 					throw new Error(
-						`Expected 1 text for 1D tensor, got ${texts.length} texts`,
+						`Expected 1 text for 1D tensor, got ${texts.length} texts`
 					);
 				}
 				const embeddings: VectorEmbedding = Array.from(response.data);
@@ -244,13 +244,13 @@ export class EmbeddingService {
 						endIdx > response.data.length
 					) {
 						throw new Error(
-							`Index out of bounds: trying to slice [${startIdx}:${endIdx}] from data of length ${response.data.length}`,
+							`Index out of bounds: trying to slice [${startIdx}:${endIdx}] from data of length ${response.data.length}`
 						);
 					}
 
 					// Extract this text's embedding from the flat array
 					const embeddings: VectorEmbedding = Array.from(
-						response.data.slice(startIdx, endIdx),
+						response.data.slice(startIdx, endIdx)
 					);
 
 					results.push({
@@ -264,7 +264,7 @@ export class EmbeddingService {
 				// For mean pooling, the result should still be [batch_size, embedding_dim]
 				// If we get here, it might indicate the pooling didn't work as expected
 				throw new Error(
-					`Unexpected tensor dimensionality: ${response.dims.length}D tensor with dims [${response.dims.join(", ")}]. Expected 1D or 2D after pooling.`,
+					`Unexpected tensor dimensionality: ${response.dims.length}D tensor with dims [${response.dims.join(", ")}]. Expected 1D or 2D after pooling.`
 				);
 			}
 
@@ -273,7 +273,7 @@ export class EmbeddingService {
 		} catch (error) {
 			console.error("Failed to generate batch embeddings:", error);
 			throw new Error(
-				`Failed to generate batch embeddings: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to generate batch embeddings: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}

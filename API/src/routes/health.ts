@@ -20,8 +20,8 @@ router.get("/", (_req, res) => {
 				uptime: process.uptime(),
 				service: "Context0 API",
 			},
-			"API is healthy",
-		),
+			"API is healthy"
+		)
 	);
 });
 
@@ -81,7 +81,7 @@ router.get("/detailed", async (_req, res) => {
 			hasEizenContract: !!process.env.EIZEN_CONTRACT_ID,
 			redis: redisStatus,
 			cors: {
-				allowedOrigins: allowedOrigins,
+				allowedOrigins,
 				credentialsEnabled: true,
 				originCount: allowedOrigins.length,
 			},
@@ -143,8 +143,8 @@ router.get("/detailed", async (_req, res) => {
 			.json(
 				errorResponse(
 					"Service degraded",
-					error instanceof Error ? error.message : "Unknown error",
-				),
+					error instanceof Error ? error.message : "Unknown error"
+				)
 			);
 	}
 });
@@ -174,8 +174,8 @@ router.get("/eizen", async (_req, res) => {
 							efSearch: process.env.EIZEN_EF_SEARCH || 50,
 						},
 					},
-					"Eizen service health check",
-				),
+					"Eizen service health check"
+				)
 			);
 			return;
 		}
@@ -197,8 +197,8 @@ router.get("/eizen", async (_req, res) => {
 					},
 					architecture: "multi-tenant",
 				},
-				"Eizen service health check",
-			),
+				"Eizen service health check"
+			)
 		);
 	} catch (error) {
 		console.error("Eizen health check error:", error);
@@ -207,8 +207,8 @@ router.get("/eizen", async (_req, res) => {
 			.json(
 				errorResponse(
 					"Eizen service error",
-					error instanceof Error ? error.message : "Unknown error",
-				),
+					error instanceof Error ? error.message : "Unknown error"
+				)
 			);
 	}
 });
@@ -239,8 +239,8 @@ router.get("/memory", async (_req, res) => {
 							? embeddingService.getInfo().model
 							: "unavailable",
 					},
-					"Memory service health check",
-				),
+					"Memory service health check"
+				)
 			);
 			return;
 		}
@@ -264,8 +264,8 @@ router.get("/memory", async (_req, res) => {
 					},
 					architecture: "multi-tenant",
 				},
-				"Memory service health check",
-			),
+				"Memory service health check"
+			)
 		);
 	} catch (error) {
 		console.error("Memory health check error:", error);
@@ -274,8 +274,8 @@ router.get("/memory", async (_req, res) => {
 			.json(
 				errorResponse(
 					"Memory service error",
-					error instanceof Error ? error.message : "Unknown error",
-				),
+					error instanceof Error ? error.message : "Unknown error"
+				)
 			);
 	}
 });

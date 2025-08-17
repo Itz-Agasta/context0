@@ -131,33 +131,33 @@ export class EizenService {
 
 			// Get wallet address that will be used for deployment
 			const walletAddress = await arweaveConfig.warp.arweave.wallets.getAddress(
-				arweaveConfig.wallet,
+				arweaveConfig.wallet
 			);
 
 			// Check wallet balance before attempting deployment
 			const balanceInfo = await checkWalletBalance(
 				arweaveConfig.warp,
-				arweaveConfig.wallet,
+				arweaveConfig.wallet
 			);
 			console.log(
-				`Wallet balance check: ${balanceInfo.readableBalance} AR (${balanceInfo.walletAddress})`,
+				`Wallet balance check: ${balanceInfo.readableBalance} AR (${balanceInfo.walletAddress})`
 			);
 
 			if (!balanceInfo.hasBalance) {
 				const rechargeInfo = getWalletRechargeInstructions(
-					balanceInfo.walletAddress,
+					balanceInfo.walletAddress
 				);
 
 				if (!rechargeInfo.isProduction) {
 					throw new Error(
 						`Insufficient wallet balance for deployment. Current balance: ${balanceInfo.readableBalance} AR. ` +
 							`💡 Dev tip: ${rechargeInfo.tip}
-Command: ${rechargeInfo.instructions}`,
+Command: ${rechargeInfo.instructions}`
 					);
 				}
 
 				throw new Error(
-					`Insufficient wallet balance for deployment. Current balance: ${balanceInfo.readableBalance} AR. ${rechargeInfo.instructions}`,
+					`Insufficient wallet balance for deployment. Current balance: ${balanceInfo.readableBalance} AR. ${rechargeInfo.instructions}`
 				);
 			}
 
@@ -170,7 +170,7 @@ Command: ${rechargeInfo.instructions}`,
 				// Production: Use EizenDbVector.deploy() for mainnet
 				const result = await EizenDbVector.deploy(
 					arweaveConfig.wallet,
-					arweaveConfig.warp,
+					arweaveConfig.warp
 				);
 				contractTxId = result.contractTxId;
 			} else {
@@ -180,10 +180,10 @@ Command: ${rechargeInfo.instructions}`,
 				// Read contract source and state from data folder
 				const contractSource = readFileSync(
 					join(process.cwd(), "data", "contract.js"),
-					"utf8",
+					"utf8"
 				);
 				const initialState = JSON.parse(
-					readFileSync(join(process.cwd(), "data", "state.json"), "utf8"),
+					readFileSync(join(process.cwd(), "data", "state.json"), "utf8")
 				);
 
 				// Set the owner to our wallet address
@@ -209,17 +209,17 @@ Command: ${rechargeInfo.instructions}`,
 			await logWalletBalanceAfterOperation(
 				arweaveConfig.warp,
 				arweaveConfig.wallet,
-				"deployment",
+				"deployment"
 			);
 
 			return {
 				contractId: contractTxId,
-				walletAddress: walletAddress,
+				walletAddress,
 			};
 		} catch (error) {
 			console.error("Failed to deploy contract:", error);
 			throw new Error(
-				`Failed to deploy contract: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to deploy contract: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}
@@ -289,7 +289,7 @@ Command: ${rechargeInfo.instructions}`,
 			this.sdk = new SetSDK<string>(
 				arweaveConfig.wallet,
 				this.contractId,
-				arweaveConfig.warp,
+				arweaveConfig.warp
 			);
 
 			// Step 3: Configure HNSW algorithm parameters from environment or use defaults
@@ -300,15 +300,15 @@ Command: ${rechargeInfo.instructions}`,
 
 			this.isInitialized = true;
 			console.log(
-				`EizenService initialized successfully for contract: ${this.contractId}`,
+				`EizenService initialized successfully for contract: ${this.contractId}`
 			);
 			console.log(
-				`HNSW Parameters: m=${options.m}, efConstruction=${options.efConstruction}, efSearch=${options.efSearch}`,
+				`HNSW Parameters: m=${options.m}, efConstruction=${options.efConstruction}, efSearch=${options.efSearch}`
 			);
 		} catch (error) {
 			console.error(
 				`EizenService initialization failed for contract ${this.contractId}:`,
-				error,
+				error
 			);
 			throw error;
 		}
@@ -389,7 +389,7 @@ Command: ${rechargeInfo.instructions}`,
 			await logWalletBalanceAfterOperation(
 				arweaveConfig.warp,
 				arweaveConfig.wallet,
-				"insert",
+				"insert"
 			);
 
 			return {
@@ -400,7 +400,7 @@ Command: ${rechargeInfo.instructions}`,
 		} catch (error) {
 			console.error("Failed to insert vector:", error);
 			throw new Error(
-				`Failed to insert vector: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to insert vector: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}
@@ -461,7 +461,7 @@ Command: ${rechargeInfo.instructions}`,
 		} catch (error) {
 			console.error("Failed to search vectors:", error);
 			throw new Error(
-				`Failed to search vectors: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to search vectors: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}
@@ -490,7 +490,7 @@ Command: ${rechargeInfo.instructions}`,
 	 * @throws {Error} When the service is not initialized or retrieval fails
 	 */
 	async getVector(
-		vectorId: number,
+		vectorId: number
 	): Promise<{ point: VectorEmbedding; metadata?: VectorMetadata } | null> {
 		await this.ensureInitialized();
 
@@ -517,7 +517,7 @@ Command: ${rechargeInfo.instructions}`,
 		} catch (error) {
 			console.error(`Failed to retrieve vector ${vectorId}:`, error);
 			throw new Error(
-				`Failed to retrieve vector: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`Failed to retrieve vector: ${error instanceof Error ? error.message : "Unknown error"}`
 			);
 		}
 	}
@@ -597,12 +597,12 @@ Command: ${rechargeInfo.instructions}`,
 			this.sdk = null;
 
 			console.log(
-				`EizenService cleanup completed for contract: ${this.contractId}`,
+				`EizenService cleanup completed for contract: ${this.contractId}`
 			);
 		} catch (error) {
 			console.error(
 				`Error during cleanup for contract ${this.contractId}:`,
-				error,
+				error
 			);
 		}
 	}
@@ -655,7 +655,7 @@ Command: ${rechargeInfo.instructions}`,
 
 		console.log("Shared Arweave configuration initialized");
 		console.log(
-			`HNSW Parameters: m=${hnswParams.m}, efConstruction=${hnswParams.efConstruction}, efSearch=${hnswParams.efSearch}`,
+			`HNSW Parameters: m=${hnswParams.m}, efConstruction=${hnswParams.efConstruction}, efSearch=${hnswParams.efSearch}`
 		);
 	}
 }

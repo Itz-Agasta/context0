@@ -7,7 +7,7 @@ export function errorHandler(
 	err: unknown,
 	_req: Request,
 	res: Response,
-	next: NextFunction,
+	next: NextFunction
 ) {
 	console.error("Global error handler:", err);
 
@@ -24,7 +24,7 @@ export function errorHandler(
 
 	const response = errorResponse(
 		statusMessage,
-		err instanceof Error ? err.message : "Unknown error",
+		err instanceof Error ? err.message : "Unknown error"
 	);
 
 	res.status(status).json(response);

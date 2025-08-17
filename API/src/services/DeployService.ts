@@ -68,7 +68,7 @@ export async function validateUserSubscription(userId: string): Promise<{
  * Validates user key record and ensures no existing contract deployment
  */
 export async function validateUserKey(
-	userId: string,
+	userId: string
 ): Promise<{ valid: boolean; key?: UserKey; error?: string }> {
 	try {
 		// Fetch existing key record for the user
@@ -143,7 +143,7 @@ export async function deployContract(): Promise<{
 export async function processContractHash(
 	contractTxId: string,
 	userId: string,
-	walletAddress: string,
+	walletAddress: string
 ): Promise<{
 	success: boolean;
 	hashData?: ContractHashData;
@@ -186,7 +186,7 @@ export async function processContractHash(
 		}
 
 		console.log(
-			`Updated contract hash for user ${userId}, wallet: ${walletAddress}`,
+			`Updated contract hash for user ${userId}, wallet: ${walletAddress}`
 		);
 
 		return {
@@ -259,7 +259,7 @@ export async function deployForUser(userId: string): Promise<DeploymentResult> {
 		const hashProcessing = await processContractHash(
 			deployment.contractId as string,
 			userId,
-			deployment.walletAddress as string,
+			deployment.walletAddress as string
 		);
 		if (!hashProcessing.success) {
 			return { success: false, error: hashProcessing.error };
@@ -302,7 +302,7 @@ export async function deployForUser(userId: string): Promise<DeploymentResult> {
  */
 async function sendDeploymentNotification(
 	userId: string,
-	deploymentData: DeploymentResult["data"],
+	deploymentData: DeploymentResult["data"]
 ): Promise<void> {
 	try {
 		if (!deploymentData) return;
@@ -352,7 +352,7 @@ async function sendDeploymentNotification(
  * ```
  */
 export async function getDeploymentStatus(
-	userId: string,
+	userId: string
 ): Promise<{ hasDeployment: boolean; keyData?: UserKey }> {
 	try {
 		// Fetch the user's key record
@@ -363,8 +363,7 @@ export async function getDeploymentStatus(
 		// Check if user has a key record and if it contains deployment data
 		// instanceKeyHash is only populated after successful contract deployment
 		if (
-			!keyData ||
-			!keyData.instanceKeyHash ||
+			!(keyData && keyData.instanceKeyHash) ||
 			keyData.instanceKeyHash === ""
 		) {
 			return { hasDeployment: false };

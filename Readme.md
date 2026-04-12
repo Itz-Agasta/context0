@@ -29,7 +29,7 @@
 
 **Context0** is world's first **decentralized memory-sharing protocol** for AI agents, where memories live forever on the blockchain and no single entity can control or censor them. Share memories seamlessly across every AI agent.
 
-## 🎯 The Vision
+## The Vision
 
 Imagine a world where:
 
@@ -41,7 +41,7 @@ Imagine a world where:
 
 **This is Context0** - the memory layer for the decentralized AI future.
 
-## 🚀 Why Context0 Changes Everything
+## Why Context0 Changes Everything
 
 ### The Problem with Current AI Memory
 
@@ -88,7 +88,7 @@ Your memories belong to **YOU**, not us.
 - **Pay once, own forever** - no monthly fees for storage
 
 
-## 🏗️ How It Works: The Context0 Protocol
+## How It Works: The Context0 Protocol
 <img width="1556" height="1598" alt="context0arc_final" src="https://github.com/user-attachments/assets/d420f8f0-03b9-4f6f-909b-27570cebf773" />
 
 
@@ -100,37 +100,37 @@ Your memories belong to **YOU**, not us.
 
 Context0 operates as a **4-layer protocol stack**:
 
-#### 🎯 **Layer 1: EizenDB (Decentralized Vector Engine)**
+#### **Layer 1: EizenDB (Decentralized Vector Engine)**
 
 - **World's first blockchain-native vector database**
 - Implements HNSW (Hierarchical Navigable Small Worlds) for sub-millisecond search
 - Protocol Buffer encoding reduces storage costs by 60%
 - Each user gets an isolated Arweave contract - true multi-tenancy at blockchain level
 
-#### 🔌 **Layer 2: Context0 API (Memory Management)**
+#### **Layer 2: Context0 API (Memory Management)**
 
 - RESTful API with enterprise-grade authentication
 - Automatic vector embedding generation using Xenova (local processing)
 - Subscription management with usage quotas
 - Real-time health monitoring and error handling
 
-#### 🤖 **Layer 3: MCP Server (AI Integration)**
+#### **Layer 3: MCP Server (AI Integration)**
 
 - Universal **Model Context Protocol** implementation
 - Works with Claude Desktop, Cursor, OpenAI, Anthropic, and custom agents
 - Provides `store_memory` and `search_memory` tools to AI agents
 - Handles automatic semantic chunking and relevance scoring
 
-#### 🎨 **Layer 4: Client Dashboard (User Interface)**
+#### **Layer 4: Client Dashboard (User Interface)**
 
 - Beautiful Next.js web app for memory management
 - Clerk authentication with social login
 - Real-time memory analytics and search interface
 - API key management and billing dashboard
 
-## 🌟 What Makes Context0 Special
+## What Makes Context0 Special
 
-### 🏆 Technical Innovations
+###  Technical Innovations
 
 | Innovation                      | What It Means                                       | Why It Matters                                  |
 | ------------------------------- | --------------------------------------------------- | ----------------------------------------------- |
@@ -140,34 +140,11 @@ Context0 operates as a **4-layer protocol stack**:
 | **Universal MCP Integration**   | Works with any AI agent                             | One memory system for all your AI tools         |
 | **Client-Side Encryption**      | Your data is encrypted before it leaves your device | True privacy - even we can't read your memories |
 
-### 🎯 Real-World Impact
 
-**For AI Users:**
 
-- **Save Money**: No more monthly fees for AI memory storage
-- **Own Your Data**: Your conversations belong to you, not corporations
-- **Better AI**: AI agents with perfect memory give better responses
-- **Future-Proof**: Works with any AI platform, never get locked in
-
-**For Developers:**
-
-- **Easy Integration**: Add persistent memory to any AI app in minutes
-- **Built to Scale**: Handles millions of vectors with sub-second search
-- **Open Source**: Build on our protocol, customize to your needs
-- **Blockchain Native**: Leverage the permanence and decentralization of Web3
-
-**For the AI Ecosystem:**
-
-- **Collective Intelligence**: Enable AI agents to build on each other's knowledge
-- **Global Memory Layer**: Create a shared, permanent knowledge base for AI
-- **Innovation Acceleration**: Focus on AI capabilities, not infrastructure
-- **Democratic AI**: Reduce dependence on big tech memory silos
-
-## 🚀 Try Context0 Today
+## Try Context0 Today
 
 ### Option 1: Quick Demo (5 minutes)
-
-_[image: Screenshot of Claude Desktop with Context0 integration working]_
 
 ```bash
 # Clone and run locally
@@ -179,8 +156,6 @@ docker-compose up
 Visit `http://localhost:3000` to see the dashboard and get your API key.
 
 ### Option 2: Use with Claude Desktop (Most Popular)
-
-_[image: Step-by-step visual guide showing Claude Desktop configuration]_
 
 1. **Get API Key**: Sign up at our dashboard
 2. **Configure Claude**: Add Context0 to your MCP settings
@@ -216,7 +191,7 @@ const relevant = await memory.search("How does the user like explanations?");
 // Returns: "User prefers technical explanations and examples"
 ```
 
-## 🌍 Join the Decentralized AI Revolution
+## Join the Decentralized AI Revolution
 
 Ready to build the future of AI memory? Here's how to get involved:
 
@@ -239,65 +214,3 @@ cd context0
 - [Developer Guide](docs/context0.md)
 - [Integration Examples](docs/examples/)
 - [Contributing Guidelines](CONTRIBUTING.md)
-
----
-
-### What's Next?
-
-We're building toward a future where:
-
-- **Global Memory Network**: AI agents share knowledge across platforms
-- **Privacy-First AI**: Users control their data completely
-- **Instant AI Context**: Any AI instantly understands your full history
-- **Democratic AI**: No single company controls AI memory infrastructure
-
-## 📊 Project Stats & Community
-
-[![GitHub Stars](https://img.shields.io/github/stars/Itz-Agasta/context0?style=social)](https://github.com/Itz-Agasta/context0)
-[![GitHub Forks](https://img.shields.io/github/forks/Itz-Agasta/context0?style=social)](https://github.com/Itz-Agasta/context0)
-[![Discord](https://img.shields.io/badge/Discord-Join%20Community-7289da?style=flat-square&logo=discord)](https://discord.gg/EmmFRZXMSK)
-[![Twitter](https://img.shields.io/badge/Twitter-Follow%20Updates-1da1f2?style=flat-square&logo=twitter)](https://twitter.com/context0_tech) _(coming soon)_
-
-**Recognition:**
-
-- Winner of [Innofusion2.0 Hackathon 2025](https://www.linkedin.com/posts/innofusionindia_innofusionhackathon-blockchainbosses-teamvyse-activity-7357410480891613184-OOBW/)
-- Featured Project at [Hack4Bengal 4.0](https://devfolio.co/projects/archivenet-f039)
-- Showcased at Bolt.new Hackathon
-
-## 🤝 Contributing & Support
-
-### Ways to Contribute
-
-- **Report Bugs**: Help us improve by reporting issues
-- **Feature Ideas**: Suggest new capabilities for the protocol
-- **Documentation**: Help others understand and use Context0
-- **Code**: Contribute to any of our four repositories
-- **Spread the Word**: Share Context0 with other AI enthusiasts
-
-### Get Help
-
-- **Documentation**: [docs/](docs/)
-- **Issues**: [GitHub Issues](https://github.com/Itz-Agasta/context0/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Itz-Agasta/context0/discussions)
-- **Email**: admin@context0.tech
-- **Security**: security@context0.tech
-
-## 📜 License & Legal
-
-This project is open source under the **MIT License** - see [LICENSE](LICENSE) for details.
-
-**Patent Notice**: We believe in open innovation. Any patents developed from this work will be made available under FRAND terms to ensure the protocol remains accessible to all developers.
-
-<div align="center">
-
-## ⭐ **Built by Team Vyse with ❤️ for the Decentralized AI Future**
-
-### _"In a world where data is power, Context0 gives that power back to the people."_
-
-**[⭐ Star this repo](https://github.com/Itz-Agasta/context0)** • **[🚀 Try the Demo](https://context0.tech)** • **[📖 Read the Docs](docs/)**
-
----
-
-_Context0 - Where AI Memories Live Forever_
-
-</div>
